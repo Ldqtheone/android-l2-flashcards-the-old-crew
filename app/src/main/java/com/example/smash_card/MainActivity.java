@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     
     private int score;
     private int numberQuestion;
+    private String mode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void getValueIntent() {
         Intent srcIntent = getIntent();
+        this.mode = srcIntent.getStringExtra("mode");
         this.score = srcIntent.getIntExtra("score", 0);
         this.numberQuestion = srcIntent.getIntExtra("numberQuestion", 1);
     }
@@ -140,10 +142,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void alertWrongAnswer(Context context, int score, int numberQuestion) throws JSONException {
         AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-        builder1.setMessage("Mauvaise réponse , la réponse est : " + this.goodAnswer.getString("name"));
-        builder1.setCancelable(true);
-
-        builder1.setPositiveButton(
+        builder1.setMessage("Mauvaise réponse , la réponse est : " + this.goodAnswer.getString("name"))
+                .setCancelable(true)
+                .setPositiveButton(
                 "Ok",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
