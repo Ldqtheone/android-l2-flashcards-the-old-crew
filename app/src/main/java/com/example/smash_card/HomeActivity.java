@@ -30,7 +30,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         backgroundImageView.setBackgroundResource(R.drawable.ssbu_background);
 
         Button startQuizButton = findViewById(R.id.startQuizButton);
+        Button aboutButton = findViewById(R.id.aboutButton);
         startQuizButton.setOnClickListener(this);
+        aboutButton.setOnClickListener(this);
 
 
     }
@@ -48,6 +50,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 }
 //                Intent intent = new Intent(HomeActivity.this, MainActivity.class);
 //                HomeActivity.this.startActivity(intent);
+                break;
+            case R.id.aboutButton:
+                Intent intent = new Intent(HomeActivity.this, About.class);
+                HomeActivity.this.startActivity(intent);
                 break;
         }
     }
