@@ -6,11 +6,15 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -41,9 +45,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         InputStream datas;
         Question question = null;
-
         try {
             datas = this.getApplicationContext().getResources().getAssets().open("datas.json");
             question = new Question(datas);
@@ -57,13 +61,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         TextView questionIndexTextView = findViewById(R.id.questionIndexTextView);
         questionIndexTextView.setText("Question " + this.numberQuestion + "/10");
 
-        ImageView testImageView = new ImageView(this);
-
-        FrameLayout answerLayout = findViewById(R.id.answerLayout);
-        answerLayout.addView(testImageView);
-
+        Button audioButton = findViewById(R.id.audioButton);
+        audioButton.setVisibility(View.INVISIBLE);
 
         ImageView answeredImageView = findViewById(R.id.answeredImageView);
+        answeredImageView.setVisibility(View.INVISIBLE);
         this.confirmButton = findViewById(R.id.confirmButton);
         this.confirmButton.setEnabled(false);
 
@@ -75,19 +77,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Collections.shuffle(characters);
 
         try {
-            Picasso.get().load(this.goodAnswer.getString("image")).into(testImageView);
+            switch (this.mode){
+                case "Noob":
+                    answeredImageView.setVisibility(View.VISIBLE);
+                    Picasso.get().load(this.goodAnswer.getString("image")).into(answeredImageView);
+                    break;
+                case "Pro":
+                    answeredImageView.setVisibility(View.VISIBLE);
+                    InputStream is = this.getApplicationContext()
+                            .getResources()
+                            .getAssets()
+                            .open("image_SSBU/" + this.goodAnswer.getString("filename") + ".png");
+                    Bitmap bitmap = BitmapFactory.decodeStream(is);
+                    answeredImageView.setImageBitmap(bitmap);
+                    break;
+                case "VIP":
+                    audioButton.setVisibility(View.VISIBLE);
+                    break;
+            }
+
 
             for(int i = 0; i < 4; i++) {
                 radioButtonGenerated = new RadioButton(this);
                 radioButtonGenerated.setText(characters.get(i).getString("name"));
                 this.radioGroup.addView(radioButtonGenerated);
             }
-        } catch (JSONException e) {
+        } catch (JSONException | IOException e) {
             e.printStackTrace();
         }
 
         confirmButton.setOnClickListener(this);
         answeredImageView.setOnClickListener(this);
+        audioButton.setOnClickListener(this);
         this.radioGroup.setOnCheckedChangeListener(this);
     }
 
@@ -97,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.radioGroup = findViewById(R.id.radioGroup);
         RadioButton selected = findViewById(this.radioGroup.getCheckedRadioButtonId());
         Context context = v.getContext();
+        MediaPlayer mediaPlayer = new MediaPlayer();
 
         try{
             switch (v.getId()){
@@ -112,9 +134,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             Intent intent = new Intent(context, MainActivity.class);
                             intent.putExtra("score", this.score);
                             intent.putExtra("numberQuestion", this.numberQuestion);
+                            intent.putExtra("mode", this.mode);
                             context.startActivity(intent);
                         } else {
-                            alertWrongAnswer(context, this.score, this.numberQuestion);
+                            alertWrongAnswer(context, this.score, this.numberQuestion, this.mode);
                         }
                     }
                     else {
@@ -127,8 +150,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     intent.putExtra("image", this.goodAnswer.getString("image"));
                     context.startActivity(intent);
                     break;
+                case R.id.audioButton:
+                    AssetFileDescriptor sample = this.getApplicationContext()
+                            .getResources()
+                            .getAssets()
+                            .openFd("SSBU_SOUNDS/" + this.goodAnswer.getString("filename") + ".wav");
+                    mediaPlayer.setDataSource(sample.getFileDescriptor(),sample.getStartOffset(),sample.getLength());
+                    mediaPlayer.prepare();
+                    mediaPlayer.start();
+                    break;
             }
-        }catch (JSONException e) {
+        }catch (JSONException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -146,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.confirmButton.setEnabled(true);
     }
 
-    private void alertWrongAnswer(Context context, int score, int numberQuestion) throws JSONException {
+    private void alertWrongAnswer(Context context, int score, int numberQuestion, String mode) throws JSONException {
         AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
         builder1.setMessage("Mauvaise réponse , la réponse est : " + this.goodAnswer.getString("name"))
                 .setCancelable(true)
@@ -158,6 +190,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Intent intent = new Intent(context, MainActivity.class);
                         intent.putExtra("score", score);
                         intent.putExtra("numberQuestion", numberQuestion);
+                        intent.putExtra("mode", mode);
                         context.startActivity(intent);
                     }
                 });

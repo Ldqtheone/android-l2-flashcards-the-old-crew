@@ -56,7 +56,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
         String[] mode = new String[] {"Noob","Pro", "VIP"};
         ArrayList<String> selectedItems = new ArrayList<>();
-
+        selectedItems.add(Arrays.asList(mode).get(0));
         builder1.setCancelable(true)
                 .setTitle("Choix de la difficulté")
                 .setSingleChoiceItems(mode, 0, new DialogInterface.OnClickListener() {
