@@ -2,6 +2,10 @@ package com.example.smash_card;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,29 +21,38 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
 
     private JSONObject goodAnswer;
+    private int score;
+    private int numberQuestion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        List<JSONObject> characters =  getRandomCharacter();
+        InputStream datas;
+        Question question = null;
+
+        try {
+            datas = this.getApplicationContext().getResources().getAssets().open("datas.json");
+            question = new Question(datas);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        List<JSONObject> characters =  question.getRandomCharacter();
+
         ImageView answeredImageView = findViewById(R.id.answeredImageView);
         Button confirmButton = findViewById(R.id.confirmButton);
+        confirmButton.setEnabled(false);
 
-        RadioButton radioButton = findViewById(R.id.radioButton);
-        RadioButton radioButton2 = findViewById(R.id.radioButton2);
-        RadioButton radioButton3 = findViewById(R.id.radioButton3);
-        RadioButton radioButton4 = findViewById(R.id.radioButton4);
+        RadioGroup radioGroup = findViewById(R.id.radioGroup);
+        RadioButton radioButtonGenerated;
 
         this.goodAnswer = characters.get(0);
 
@@ -47,103 +60,89 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         try {
             Picasso.get().load(this.goodAnswer.getString("image")).into(answeredImageView);
-            radioButton.setText(characters.get(0).getString("name"));
-            radioButton2.setText(characters.get(1).getString("name"));
-            radioButton3.setText(characters.get(2).getString("name"));
-            radioButton4.setText(characters.get(3).getString("name"));
+
+            for(int i = 0; i < 4; i++) {
+                radioButtonGenerated = new RadioButton(this);
+                radioButtonGenerated.setText(characters.get(i).getString("name"));
+                radioGroup.addView(radioButtonGenerated);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         confirmButton.setOnClickListener(this);
+        answeredImageView.setOnClickListener(this);
+        radioGroup.setOnCheckedChangeListener(this);
     }
 
     @Override
     public void onClick(View v) {
+
         RadioGroup radioButtonGroup=findViewById(R.id.radioGroup);
         RadioButton selected = findViewById(radioButtonGroup.getCheckedRadioButtonId());
+        Context context = v.getContext();
 
-        switch (v.getId()){
-            case R.id.confirmButton:
-                try {
-                    if(selected.getText().toString().equals(this.goodAnswer.getString("name"))){
-                        Log.i("answer","Victory");
-                    }else{
-                        Log.i("answer","Tu pus , c'était " + this.goodAnswer.getString("name"));
+        try{
+            switch (v.getId()){
+                case R.id.confirmButton:
+                    Intent srcIntent = getIntent();
+                    this.score = srcIntent.getIntExtra("score", 0);
+                    this.numberQuestion = srcIntent.getIntExtra("numberQuestion", 0);
+                    this.numberQuestion += 1;
+
+                    if(this.numberQuestion <= 10) {
+                        if (selected.getText().toString().equals(this.goodAnswer.getString("name"))) {
+                            Log.i("answer", "Victory");
+                            this.score += 1;
+                            Log.i("Score", "onClick: " + this.score);
+                            Intent intent = new Intent(context, MainActivity.class);
+                            intent.putExtra("score", this.score);
+                            intent.putExtra("numberQuestion", this.numberQuestion);
+                            context.startActivity(intent);
+                        } else {
+                            alertWrongAnswer(context, this.score, this.numberQuestion);
+                        }
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                break;
-        }
-    }
-
-    private int getRandomNumberInRange(int min, int max) {
-
-        if (min >= max) {
-            throw new IllegalArgumentException("max must be greater than min");
-        }
-
-        Random r = new Random();
-        return r.nextInt((max - min) + 1) + min;
-    }
-
-    private JSONObject loadJSONFromAsset() {
-
-        String json = null;
-        JSONObject datas = null;
-
-        try {
-            InputStream is = this.getApplicationContext().getResources().getAssets().open("datas.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            json = new String(buffer, "UTF-8");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
-        }
-
-        try {
-            datas = new JSONObject(json);
-        } catch (JSONException e) {
+                    else {
+                        Log.i("Score", "onClick: Ecran de score");
+                    }
+                    
+                    break;
+                case R.id.answeredImageView:
+                    Intent intent = new Intent(context, FullScreenImageActivity.class);
+                    intent.putExtra("image", this.goodAnswer.getString("image"));
+                    context.startActivity(intent);
+                    break;
+            }
+        }catch (JSONException e) {
             e.printStackTrace();
         }
-
-        return datas;
     }
 
-    private List<JSONObject> getRandomCharacter() {
-        JSONObject datas = loadJSONFromAsset();
-        int datasLenght = 0;
-        List<JSONObject> charactersList = new ArrayList<>();
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        Button confirmButton = findViewById(R.id.confirmButton);
+        confirmButton.setEnabled(true);
+    }
 
-        try {
-            datasLenght = datas.getJSONArray("datas").length();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    private void alertWrongAnswer(Context context, int score, int numberQuestion) throws JSONException {
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+        builder1.setMessage("Mauvaise réponse , la réponse est : " + this.goodAnswer.getString("name"));
+        builder1.setCancelable(true);
 
-        for (int i = 0; i < 4; i++){
-            int randomChar = this.getRandomNumberInRange(0, datasLenght - 1);
-            JSONObject character = null;
+        builder1.setPositiveButton(
+                "Ok",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        Intent intent = new Intent(context, MainActivity.class);
+                        intent.putExtra("score", score);
+                        intent.putExtra("numberQuestion", numberQuestion);
+                        context.startActivity(intent);
+                    }
+                });
 
-            try {
-                character = (JSONObject) datas.getJSONArray("datas").get(randomChar);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            if(charactersList.isEmpty()){
-                charactersList.add(character);
-            }else if(charactersList.contains(character)){
-                i--;
-            }else{
-                charactersList.add(character);
-            }
-        }
-
-        return charactersList;
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
     }
 }
