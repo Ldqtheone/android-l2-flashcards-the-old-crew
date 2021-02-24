@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -49,6 +50,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         List<JSONObject> characters =  question.getRandomCharacter();
+
+        this.getValueIntent();
+        TextView questionIndexTextView = findViewById(R.id.questionIndexTextView);
+        questionIndexTextView.setText("Question " + this.numberQuestion + "/10");
+
 
         ImageView answeredImageView = findViewById(R.id.answeredImageView);
         this.confirmButton = findViewById(R.id.confirmButton);
@@ -88,9 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         try{
             switch (v.getId()){
                 case R.id.confirmButton:
-                    Intent srcIntent = getIntent();
-                    this.score = srcIntent.getIntExtra("score", 0);
-                    this.numberQuestion = srcIntent.getIntExtra("numberQuestion", 0);
+                    this.getValueIntent();
                     this.numberQuestion += 1;
 
                     if(this.numberQuestion <= 10) {
@@ -120,6 +124,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private void getValueIntent() {
+        Intent srcIntent = getIntent();
+        this.score = srcIntent.getIntExtra("score", 0);
+        this.numberQuestion = srcIntent.getIntExtra("numberQuestion", 1);
     }
 
     @Override
