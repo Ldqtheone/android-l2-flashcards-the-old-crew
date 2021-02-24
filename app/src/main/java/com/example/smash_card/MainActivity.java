@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -56,6 +57,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         TextView questionIndexTextView = findViewById(R.id.questionIndexTextView);
         questionIndexTextView.setText("Question " + this.numberQuestion + "/10");
 
+        ImageView testImageView = new ImageView(this);
+
+        FrameLayout answerLayout = findViewById(R.id.answerLayout);
+        answerLayout.addView(testImageView);
+
 
         ImageView answeredImageView = findViewById(R.id.answeredImageView);
         this.confirmButton = findViewById(R.id.confirmButton);
@@ -69,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Collections.shuffle(characters);
 
         try {
-            Picasso.get().load(this.goodAnswer.getString("image")).into(answeredImageView);
+            Picasso.get().load(this.goodAnswer.getString("image")).into(testImageView);
 
             for(int i = 0; i < 4; i++) {
                 radioButtonGenerated = new RadioButton(this);
