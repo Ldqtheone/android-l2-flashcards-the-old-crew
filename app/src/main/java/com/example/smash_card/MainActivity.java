@@ -27,6 +27,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
 
     private JSONObject goodAnswer;
+    private RadioGroup radioGroup;
+    private Button confirmButton;
+    
     private int score;
     private int numberQuestion;
 
@@ -48,10 +51,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         List<JSONObject> characters =  question.getRandomCharacter();
 
         ImageView answeredImageView = findViewById(R.id.answeredImageView);
-        Button confirmButton = findViewById(R.id.confirmButton);
-        confirmButton.setEnabled(false);
+        this.confirmButton = findViewById(R.id.confirmButton);
+        this.confirmButton.setEnabled(false);
 
-        RadioGroup radioGroup = findViewById(R.id.radioGroup);
+        this.radioGroup = findViewById(R.id.radioGroup);
         RadioButton radioButtonGenerated;
 
         this.goodAnswer = characters.get(0);
@@ -64,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             for(int i = 0; i < 4; i++) {
                 radioButtonGenerated = new RadioButton(this);
                 radioButtonGenerated.setText(characters.get(i).getString("name"));
-                radioGroup.addView(radioButtonGenerated);
+                this.radioGroup.addView(radioButtonGenerated);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -72,14 +75,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         confirmButton.setOnClickListener(this);
         answeredImageView.setOnClickListener(this);
-        radioGroup.setOnCheckedChangeListener(this);
+        this.radioGroup.setOnCheckedChangeListener(this);
     }
 
     @Override
     public void onClick(View v) {
 
-        RadioGroup radioButtonGroup=findViewById(R.id.radioGroup);
-        RadioButton selected = findViewById(radioButtonGroup.getCheckedRadioButtonId());
+        this.radioGroup = findViewById(R.id.radioGroup);
+        RadioButton selected = findViewById(this.radioGroup.getCheckedRadioButtonId());
         Context context = v.getContext();
 
         try{
@@ -121,8 +124,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        Button confirmButton = findViewById(R.id.confirmButton);
-        confirmButton.setEnabled(true);
+        this.confirmButton = findViewById(R.id.confirmButton);
+        this.confirmButton.setEnabled(true);
     }
 
     private void alertWrongAnswer(Context context, int score, int numberQuestion) throws JSONException {
