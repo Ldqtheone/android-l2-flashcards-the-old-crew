@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.smash_card.MusicPlayerService;
 import com.example.smash_card.SmashCharacter;
 import com.example.smash_card.R;
 
@@ -28,6 +29,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+
 /**
  * Main activity / landing activity
  */
@@ -35,12 +37,15 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final String TAG = "HomeActivity";
     private List<SmashCharacter> characters = new ArrayList<>();
+//    private MusicPlayer musicPlayer = new MusicPlayer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
+        Intent intent = new Intent(HomeActivity.this, MusicPlayerService.class);
+        intent.putExtra("url", "http://gamethemesongs.com/song/download/26035");
+        startService(intent);
         Button startQuizButton = findViewById(R.id.startQuizButton);
         Button aboutButton = findViewById(R.id.aboutButton);
         Button charactersButton = findViewById(R.id.charactersButton);
@@ -136,6 +141,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
+                        stopService(new Intent(HomeActivity.this, MusicPlayerService.class));
                         Intent intent = new Intent(context, GameActivity.class);
                         intent.putExtra("mode", selectedItems.get(0));
                         intent.putParcelableArrayListExtra("characters", (ArrayList<? extends Parcelable>) characters);
@@ -160,6 +166,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         "Ok",
                         (dialog, id) -> {
                             dialog.cancel();
+                            stopService(new Intent(HomeActivity.this, MusicPlayerService.class));
                             finishAffinity();
                         })
                 .setNegativeButton("Annuler", (dialog, id) -> dialog.cancel());

@@ -3,6 +3,8 @@ package com.example.smash_card;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 
 /**
  * Class Smash Character

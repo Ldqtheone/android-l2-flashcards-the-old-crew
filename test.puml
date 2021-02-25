@@ -1,0 +1,62 @@
+@startuml
+class com.example.smash_card.activities.AboutActivity {
+# void onCreate(Bundle)
+}
+class com.example.smash_card.activities.CharacterListActivity {
++ {static} String TAG
+- List<SmashCharacter> characters
+- CharacterAdapter adapter
+# void onCreate(Bundle)
+}
+class com.example.smash_card.activities.HomeActivity {
+- {static} String TAG
+- List<SmashCharacter> characters
+# void onCreate(Bundle)
+- void loadDataFromApi(Button,Button)
++ void onClick(View)
+- void dialogGameMode(Context)
++ void onBackPressed()
+}
+class com.example.smash_card.activities.FullScreenImageActivity {
+# void onCreate(Bundle)
+}
+class com.example.smash_card.activities.StatsEndQuizActivity {
+# void onCreate(Bundle)
++ void onClick(View)
++ void onBackPressed()
+}
+class com.example.smash_card.activities.GameActivity {
+- SmashCharacter goodAnswer
+- RadioGroup radioGroup
+- Button confirmButton
+- List<SmashCharacter> characters
+- List<SmashCharacter> charactersAnswers
+- InfoGame infoGame
+# void onCreate(Bundle)
++ void onClick(View)
+- void handleConfirm(Context)
+- void getValueIntent()
++ void onBackPressed()
++ void onCheckedChanged(RadioGroup,int)
+- void alertWrongAnswer(Context)
+}
+class com.example.smash_card.activities.FlashCardActivity {
+- SmashCharacter character
+# void onCreate(Bundle)
++ void onClick(View)
+}
+
+
+androidx.appcompat.app.AppCompatActivity <|-- com.example.smash_card.activities.AboutActivity
+androidx.appcompat.app.AppCompatActivity <|-- com.example.smash_card.activities.CharacterListActivity
+com.example.smash_card.activities.OnClickListener <|.. com.example.smash_card.activities.HomeActivity
+androidx.appcompat.app.AppCompatActivity <|-- com.example.smash_card.activities.HomeActivity
+androidx.appcompat.app.AppCompatActivity <|-- com.example.smash_card.activities.FullScreenImageActivity
+com.example.smash_card.activities.OnClickListener <|.. com.example.smash_card.activities.StatsEndQuizActivity
+androidx.appcompat.app.AppCompatActivity <|-- com.example.smash_card.activities.StatsEndQuizActivity
+com.example.smash_card.activities.OnClickListener <|.. com.example.smash_card.activities.GameActivity
+com.example.smash_card.activities.OnCheckedChangeListener <|.. com.example.smash_card.activities.GameActivity
+androidx.appcompat.app.AppCompatActivity <|-- com.example.smash_card.activities.GameActivity
+com.example.smash_card.activities.OnClickListener <|.. com.example.smash_card.activities.FlashCardActivity
+androidx.appcompat.app.AppCompatActivity <|-- com.example.smash_card.activities.FlashCardActivity
+@enduml

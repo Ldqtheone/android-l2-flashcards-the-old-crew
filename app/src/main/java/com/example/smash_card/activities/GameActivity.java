@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
@@ -44,6 +45,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private List<SmashCharacter> characters = new ArrayList<>();
     private List<SmashCharacter> charactersAnswers = new ArrayList<>();
     private InfoGame infoGame = new InfoGame();
+//    private MusicPlayer musicPlayer = new MusicPlayer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,6 +168,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             this.infoGame.increaseNumberQuestionByOne();
             intent = new Intent(context, GameActivity.class);
         } else {
+//            this.musicPlayer.stopSound();
             intent = new Intent(context, StatsEndQuizActivity.class);
         }
         intent.putExtra("infoGame", infoGame);
@@ -183,6 +186,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         if (srcIntent.getStringExtra("mode") != null) {
+//            this.musicPlayer.playSound("http://www.feplanet.net/files/scripts/music.php?song=1595");
             this.infoGame.setMode(srcIntent.getStringExtra("mode"));
         }
 
@@ -201,6 +205,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         "Ok",
                         (dialog, id) -> {
                             dialog.cancel();
+//                            GameActivity.this.musicPlayer.stopSound();
                             Intent intent = new Intent(GameActivity.this, HomeActivity.class);
                             GameActivity.this.startActivity(intent);
                         })

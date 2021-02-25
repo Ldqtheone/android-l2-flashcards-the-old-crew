@@ -1,7 +1,9 @@
 package com.example.smash_card;
 
 import android.content.res.AssetFileDescriptor;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.util.Log;
 
 import java.io.IOException;
 import java.util.Random;
@@ -21,12 +23,12 @@ public class Utils {
 
     }
 
-    /**
-     * Get Random Number In Range
-     * @param min
-     * @param max
-     * @return int
-     */
+        /**
+         * Get Random Number In Range
+         * @param min
+         * @param max
+         * @return int
+         */
     public static int getRandomNumberInRange(int min, int max) {
 
         if (min >= max) {
