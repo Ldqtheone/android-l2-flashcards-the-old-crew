@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
@@ -148,6 +147,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case R.id.answeredImageView:
                     Intent intent = new Intent(context, FullScreenImageActivity.class);
                     intent.putExtra("image", this.goodAnswer.getString("image"));
+                    intent.putExtra("imagePro", this.goodAnswer.getString("filename") + ".png");
+                    intent.putExtra("mode", this.mode);
                     context.startActivity(intent);
                     break;
                 case R.id.audioButton:
