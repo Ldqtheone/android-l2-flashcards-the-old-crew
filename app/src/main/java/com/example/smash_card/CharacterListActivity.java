@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -12,7 +13,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,7 +25,6 @@ import okhttp3.Response;
 public class CharacterListActivity extends AppCompatActivity {
 
     public static final String TAG = "CharacterListActivity";
-    private List<Question> characters;
     private CharacterAdapter adapter;
 
     @Override
@@ -33,22 +32,23 @@ public class CharacterListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_character_list);
 
-        characters = new ArrayList<>();
+        Intent question = getIntent();
+        Question q = question.getParcelableExtra("question");
 
-        loadRatesFromApi();
+        Log.i(TAG, "onCreate: " + q.getTest());
 
-        adapter = new CharacterAdapter(characters);
+        adapter = new CharacterAdapter(q.getCharacters());
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private void loadRatesFromApi() {
+    /*private void loadCharsFromApi() {
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
-                .url("https://api.exchangeratesapi.io/latest")
+                .url("http://gryt.tech:8080/smashbros/")
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
@@ -77,7 +77,6 @@ public class CharacterListActivity extends AppCompatActivity {
                     // J'ai modifié données donc rafraichie l'UI
                     runOnUiThread(() -> adapter.notifyDataSetChanged());
 
-                    Log.i(TAG, "onResponse: Currencies.size = " + currencies.size());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -86,5 +85,5 @@ public class CharacterListActivity extends AppCompatActivity {
         });
 
         Log.i(TAG, "loadRatesFromApi: Started HTTP Request");
-    }
+    }*/
 }

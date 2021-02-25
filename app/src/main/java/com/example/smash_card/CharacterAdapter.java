@@ -13,17 +13,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
 
-public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.ViewHolder> implements View.OnClickListener {
+public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.ViewHolder>{
 
-    private List<Question> questions;
+    private List<JSONObject> question;
 
-    public CharacterAdapter(List<Question> questions) {
-        this.questions = questions;
+    public CharacterAdapter(List<JSONObject> question) {
+        this.question = question;
     }
 
     @NonNull
@@ -37,36 +38,33 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull CharacterAdapter.ViewHolder holder, int position) {
-        Question question = questions.get(position);
-
-        JSONObject allchars;
 
         try {
-            allchars = (JSONObject) question.getCharactersData().getJSONArray("datas").get(position);
+            JSONObject allchars = this.question.get(position);
             Picasso.get().load(allchars.getString("image")).into(holder.image);
             holder.charName.setText(allchars.getString("name"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        holder.itemView.setOnClickListener(this);
+        //holder.itemView.setOnClickListener(this);
     }
 
     @Override
     public int getItemCount() {
-        return questions.size();
+        return this.question.size();
     }
 
-    @Override
+   /* @Override
     public void onClick(View v) {
         if (v.getId() == R.id.rootItem) {
             Context context = v.getContext();
             JSONObject character = (JSONObject) v.getTag();
             Intent intent = new Intent(context, MainActivity.class);
-            intent.putExtra("character", character);
+            intent.putExtra("question", character);
             context.startActivity(intent);
         }
-    }
+    }*/
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
