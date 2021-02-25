@@ -37,14 +37,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         Button startQuizButton = findViewById(R.id.startQuizButton);
         Button aboutButton = findViewById(R.id.aboutButton);
         Button charactersButton = findViewById(R.id.charactersButton);
-        startQuizButton.setOnClickListener(this);
         aboutButton.setOnClickListener(this);
-
-        this.loadDataFromApi(charactersButton);
-
+        this.loadDataFromApi(charactersButton, startQuizButton);
     }
 
-    private void loadDataFromApi(Button charactersButton) {
+    private void loadDataFromApi(Button charactersButton, Button startQuizButton) {
         OkHttpClient client = new OkHttpClient();
 
 
@@ -76,6 +73,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     e.printStackTrace();
                 }
                 charactersButton.setOnClickListener(HomeActivity.this);
+                startQuizButton.setOnClickListener(HomeActivity.this);
             }
         });
     }
@@ -93,8 +91,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.aboutButton:
-                Intent intent = new Intent(HomeActivity.this, About.class);
-                HomeActivity.this.startActivity(intent);
+                Intent intentAbout = new Intent(HomeActivity.this, About.class);
+                HomeActivity.this.startActivity(intentAbout);
                 break;
             case R.id.charactersButton:
                 Intent charListIntent = new Intent(HomeActivity.this, CharacterListActivity.class);
@@ -126,6 +124,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         dialog.cancel();
                         Intent intent = new Intent(context, MainActivity.class);
                         intent.putExtra("mode", selectedItems.get(0));
+                        intent.putParcelableArrayListExtra("characters", (ArrayList<? extends Parcelable>) characters);
                         context.startActivity(intent);
                     }
                 });
@@ -134,5 +133,22 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         alert11.show();
     }
 
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+
+        builder1.setMessage("Êtes-vous sûr de vouloir quitter Super Smash Card ?")
+                .setCancelable(true)
+                .setPositiveButton(
+                        "Ok",
+                        (dialog, id) -> {
+                            dialog.cancel();
+                            finishAffinity();
+                        })
+                .setNegativeButton("Annuler", (dialog, id) -> dialog.cancel());
+
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
+    }
 
 }

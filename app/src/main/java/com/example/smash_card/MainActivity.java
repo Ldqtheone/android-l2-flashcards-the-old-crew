@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,15 +27,17 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
 
-    private JSONObject goodAnswer;
+    private Characters goodAnswer;
     private RadioGroup radioGroup;
     private Button confirmButton;
-    
+    private List<Characters> characters = new ArrayList<>();
+    private List<Characters> charactersAnswers = new ArrayList<>();
     private int score;
     private int numberQuestion;
     private String mode;
@@ -45,17 +48,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
 
-        InputStream datas;
-        Question question = null;
-        try {
-            datas = this.getApplicationContext().getResources().getAssets().open("datas.json");
-            question = new Question(datas);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        List<JSONObject> characters = question.getRandomCharacter();
-
         this.getValueIntent();
+        Question question = new Question(this.characters);
         TextView questionIndexTextView = findViewById(R.id.questionIndexTextView);
         questionIndexTextView.setText("Question " + this.numberQuestion + "/10");
 
@@ -70,39 +64,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.radioGroup = findViewById(R.id.radioGroup);
         RadioButton radioButtonGenerated;
 
-        this.goodAnswer = characters.get(0);
+        this.charactersAnswers = question.getRandomCharacter();
+        this.goodAnswer = this.charactersAnswers.get(0);
+        this.characters.remove(this.goodAnswer);
+        Collections.shuffle(charactersAnswers);
 
-        Collections.shuffle(characters);
 
-        try {
-            switch (this.mode){
-                case "Noob":
-                    answeredImageView.setVisibility(View.VISIBLE);
-                    Picasso.get().load(this.goodAnswer.getString("image")).into(answeredImageView);
-                    break;
-                case "Pro":
-                    answeredImageView.setVisibility(View.VISIBLE);
-                    InputStream is = this.getApplicationContext()
+        switch (this.mode) {
+            case "Noob":
+                answeredImageView.setVisibility(View.VISIBLE);
+                Picasso.get().load(this.goodAnswer.getImage()).into(answeredImageView);
+                break;
+            case "Pro":
+                answeredImageView.setVisibility(View.VISIBLE);
+                InputStream is = null;
+                try {
+                    is = this.getApplicationContext()
                             .getResources()
                             .getAssets()
-                            .open("image_SSBU/" + this.goodAnswer.getString("filename") + ".png");
-                    Bitmap bitmap = BitmapFactory.decodeStream(is);
-                    answeredImageView.setImageBitmap(bitmap);
-                    break;
-                case "VIP":
-                    audioButton.setVisibility(View.VISIBLE);
-                    break;
-            }
-
-
-            for(int i = 0; i < 4; i++) {
-                radioButtonGenerated = new RadioButton(this);
-                radioButtonGenerated.setText(characters.get(i).getString("name"));
-                this.radioGroup.addView(radioButtonGenerated);
-            }
-        } catch (JSONException | IOException e) {
-            e.printStackTrace();
+                            .open("image_SSBU/" + this.goodAnswer.getFileName() + ".png");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+                answeredImageView.setImageBitmap(bitmap);
+                break;
+            case "VIP":
+                audioButton.setVisibility(View.VISIBLE);
+                break;
         }
+
+
+        for (int i = 0; i < 4; i++) {
+            radioButtonGenerated = new RadioButton(this);
+            radioButtonGenerated.setText(charactersAnswers.get(i).getName());
+            this.radioGroup.addView(radioButtonGenerated);
+        }
+
 
         confirmButton.setOnClickListener(this);
         answeredImageView.setOnClickListener(this);
@@ -122,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             switch (v.getId()) {
                 case R.id.confirmButton:
                     this.getValueIntent();
-                    if (selected.getText().toString().equals(this.goodAnswer.getString("name"))) {
+                    if (selected.getText().toString().equals(this.goodAnswer.getName())) {
                         this.score += 1;
                         handleConfirm(context);
                     } else {
@@ -132,8 +130,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 case R.id.answeredImageView:
                     Intent intent = new Intent(context, FullScreenImageActivity.class);
-                    intent.putExtra("image", this.goodAnswer.getString("image"));
-                    intent.putExtra("imagePro", this.goodAnswer.getString("filename") + ".png");
+                    intent.putExtra("image", this.goodAnswer.getImage());
+                    intent.putExtra("imagePro", this.goodAnswer.getFileName() + ".png");
                     intent.putExtra("mode", this.mode);
                     context.startActivity(intent);
                     break;
@@ -142,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     AssetFileDescriptor sample = this.getApplicationContext()
                             .getResources()
                             .getAssets()
-                            .openFd("SSBU_SOUNDS/" + this.goodAnswer.getString("filename") + ".wav");
+                            .openFd("SSBU_SOUNDS/" + this.goodAnswer.getFileName() + ".wav");
                     mediaPlayer.setDataSource(sample.getFileDescriptor(), sample.getStartOffset(), sample.getLength());
                     mediaPlayer.prepare();
                     mediaPlayer.start();
@@ -164,6 +162,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         intent.putExtra("score", this.score);
         intent.putExtra("numberQuestion", this.numberQuestion);
         intent.putExtra("mode", this.mode);
+        intent.putParcelableArrayListExtra("characters", (ArrayList<? extends Parcelable>) this.characters);
         context.startActivity(intent);
     }
 
@@ -172,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.mode = srcIntent.getStringExtra("mode");
         this.score = srcIntent.getIntExtra("score", 0);
         this.numberQuestion = srcIntent.getIntExtra("numberQuestion", 1);
+        this.characters = srcIntent.getParcelableArrayListExtra("characters");
     }
 
     @Override
@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void alertWrongAnswer(Context context) throws JSONException {
         AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-        builder1.setMessage("Mauvaise réponse , la réponse est : " + this.goodAnswer.getString("name"))
+        builder1.setMessage("Mauvaise réponse , la réponse est : " + this.goodAnswer.getName())
                 .setCancelable(false)
                 .setPositiveButton(
                         "Ok",
