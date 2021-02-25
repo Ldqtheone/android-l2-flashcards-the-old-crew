@@ -2,6 +2,7 @@ package com.example.smash_card;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
@@ -49,5 +50,10 @@ public class StatsEndQuiz extends AppCompatActivity implements View.OnClickListe
                 StatsEndQuiz.this.startActivity(intent);
                 break;
         }
+    }
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(StatsEndQuiz.this, HomeActivity.class);
+        StatsEndQuiz.this.startActivity(intent);
     }
 }
