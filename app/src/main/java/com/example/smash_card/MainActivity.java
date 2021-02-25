@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
@@ -44,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         InputStream datas;
         Question question = null;
@@ -165,6 +163,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+
+        builder1.setMessage("Êtes-vous sûr de vouloir retourner à l'accueil ?")
+                .setCancelable(true)
+                .setPositiveButton(
+                        "Ok",
+                        (dialog, id) -> {
+                            dialog.cancel();
+                            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                            MainActivity.this.startActivity(intent);
+                        })
+                .setNegativeButton("Annuler", (dialog, id) -> dialog.cancel());
+
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
+    }
+
     private void getValueIntent() {
         Intent srcIntent = getIntent();
         this.mode = srcIntent.getStringExtra("mode");
@@ -184,16 +201,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setCancelable(true)
                 .setPositiveButton(
                 "Ok",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                        Intent intent = new Intent(context, MainActivity.class);
-                        intent.putExtra("score", score);
-                        intent.putExtra("numberQuestion", numberQuestion);
-                        intent.putExtra("mode", mode);
-                        context.startActivity(intent);
-                    }
-                });
+                        (dialog, id) -> {
+                            dialog.cancel();
+                            Intent intent = new Intent(context, MainActivity.class);
+                            intent.putExtra("score", score);
+                            intent.putExtra("numberQuestion", numberQuestion);
+                            intent.putExtra("mode", mode);
+                            context.startActivity(intent);
+                        });
 
         AlertDialog alert11 = builder1.create();
         alert11.show();

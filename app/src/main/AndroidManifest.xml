@@ -13,6 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmashCard"
         android:usesCleartextTraffic="true">
+        <activity android:name=".CharacterListActivity"></activity>
         <activity android:name=".About" />
         <activity android:name=".HomeActivity">
             <intent-filter>

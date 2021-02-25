@@ -1,7 +1,5 @@
 package com.example.smash_card;
 
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,6 +17,10 @@ public class Question {
     public Question(InputStream dataJson) {
         this.dataJson = dataJson;
         this.charactersData = this.loadJSONFromAsset();
+    }
+
+    public JSONObject getCharactersData() {
+        return charactersData;
     }
 
     private JSONObject loadJSONFromAsset() {
