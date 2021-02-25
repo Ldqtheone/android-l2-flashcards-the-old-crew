@@ -34,7 +34,7 @@ public class FullScreenImageActivity extends AppCompatActivity {
                     InputStream is = this.getApplicationContext()
                     .getResources()
                     .getAssets()
-                    .open("image_SSBU/" + srcIntent.getStringExtra("imagePro"));
+                    .open("SSBU_IMAGES/" + srcIntent.getStringExtra("imagePro"));
                     Bitmap bitmap = BitmapFactory.decodeStream(is);
                     fullScreenImageView.setImageBitmap(bitmap);
                 } catch (IOException e) {

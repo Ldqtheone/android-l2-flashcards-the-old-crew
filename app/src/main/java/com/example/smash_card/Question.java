@@ -1,29 +1,34 @@
 package com.example.smash_card;
-
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
+
+import static com.example.smash_card.Utils.getRandomNumberInRange;
+
+/**
+ * Class Question
+ */
 public class Question {
 
-    private List<Characters> charactersList;
+    private List<SmashCharacter> charactersList;
 
-    public Question(List<Characters> charactersList) {
+    public Question(List<SmashCharacter> charactersList) {
         this.charactersList = charactersList;
     }
 
-
-
-    public List<Characters> getRandomCharacter() {
+    /**
+     * Return 4 random characters from character list
+     * @return List<SmashCharacter> info fighters smash bros
+     */
+    public List<SmashCharacter> getRandomCharacter() {
         int dataLength;
 
-        List<Characters> charactersListTemp = new ArrayList<>();
+        List<SmashCharacter> charactersListTemp = new ArrayList<>();
         dataLength = this.charactersList.size();
 
         for (int i = 0; i < 4; i++){
-            int randomCharIndex = this.getRandomNumberInRange(0, dataLength - 1);
-            Characters character = this.charactersList.get(randomCharIndex);
+            int randomCharIndex = getRandomNumberInRange(0, dataLength - 1);
+            SmashCharacter character = this.charactersList.get(randomCharIndex);
 
             if(charactersListTemp.isEmpty()){
                 charactersListTemp.add(character);
@@ -36,13 +41,5 @@ public class Question {
         return charactersListTemp;
     }
 
-    private int getRandomNumberInRange(int min, int max) {
 
-        if (min >= max) {
-            throw new IllegalArgumentException("max must be greater than min");
-        }
-
-        Random r = new Random();
-        return r.nextInt((max - min) + 1) + min;
-    }
 }

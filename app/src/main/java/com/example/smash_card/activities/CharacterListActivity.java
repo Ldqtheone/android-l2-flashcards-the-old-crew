@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.smash_card.CharacterAdapter;
-import com.example.smash_card.Characters;
+import com.example.smash_card.SmashCharacter;
 import com.example.smash_card.R;
 
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
 public class CharacterListActivity extends AppCompatActivity {
 
     public static final String TAG = "CharacterListActivity";
-    private List<Characters> characters;
+    private List<SmashCharacter> characters;
     private CharacterAdapter adapter;
 
     @Override

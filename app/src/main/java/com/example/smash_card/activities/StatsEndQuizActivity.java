@@ -8,8 +8,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.smash_card.InfoGame;
 import com.example.smash_card.R;
 
+/**
+ * Activity Stats Quiz
+ */
 public class StatsEndQuizActivity extends AppCompatActivity implements View.OnClickListener {
 
 
@@ -17,13 +21,13 @@ public class StatsEndQuizActivity extends AppCompatActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats_end_quiz);
-        Intent srcIntent = getIntent();
+        InfoGame infoGame = getIntent().getParcelableExtra("infoGame");
 
-        int score = srcIntent.getIntExtra("score", 0);
-        int question = srcIntent.getIntExtra("numberQuestion", 1);
+        int score = infoGame.getScore();
+        int question = infoGame.getNumberQuestion();
         int percent = Math.round(((float) score / (float) question) * 100.0f);
         TextView modeText = findViewById(R.id.modeText);
-        modeText.setText(srcIntent.getStringExtra("mode"));
+        modeText.setText(infoGame.getMode());
         TextView scoreText = findViewById(R.id.scoreText);
         scoreText.setText(score + "");
         TextView questionText = findViewById(R.id.questionText);

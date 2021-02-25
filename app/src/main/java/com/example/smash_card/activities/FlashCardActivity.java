@@ -4,27 +4,25 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.smash_card.Characters;
+import com.example.smash_card.SmashCharacter;
 import com.example.smash_card.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import static com.example.smash_card.Utils.generateMediaplayer;
+import static com.example.smash_card.Utils.playWavSound;
 
 public class FlashCardActivity extends AppCompatActivity implements View.OnClickListener {
-    private Characters character;
+    private SmashCharacter character;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +41,7 @@ public class FlashCardActivity extends AppCompatActivity implements View.OnClick
             is = this.getApplicationContext()
                     .getResources()
                     .getAssets()
-                    .open("image_SSBU/" + this.character.getFileName() + ".png");
+                    .open("SSBU_IMAGES/" + this.character.getFileName() + ".png");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -76,7 +74,7 @@ public class FlashCardActivity extends AppCompatActivity implements View.OnClick
                     break;
 
                 case R.id.playSoundButton:
-                    generateMediaplayer(this.getApplicationContext()
+                    playWavSound(this.getApplicationContext()
                             .getResources()
                             .getAssets()
                             .openFd("SSBU_SOUNDS/" + this.character.getFileName() + ".wav"));

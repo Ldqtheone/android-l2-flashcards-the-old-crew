@@ -16,11 +16,14 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+/**
+ * Class Character Adapter
+ */
 public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.ViewHolder> implements View.OnClickListener {
 
-    private List<Characters> characters;
+    private List<SmashCharacter> characters;
 
-    public CharacterAdapter(List<Characters> characters) {
+    public CharacterAdapter(List<SmashCharacter> characters) {
         this.characters = characters;
     }
 
@@ -36,7 +39,7 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
     @Override
     public void onBindViewHolder(@NonNull CharacterAdapter.ViewHolder holder, int position) {
 
-        Characters character = characters.get(position);
+        SmashCharacter character = characters.get(position);
         Picasso.get().load(character.getImage()).into(holder.image);
         holder.charName.setText(character.getName());
         holder.itemView.setTag(character);
@@ -55,24 +58,13 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
         switch (v.getId()) {
             case R.id.rootItem:
                 Context context = v.getContext();
-                Characters character = (Characters) v.getTag();
+                SmashCharacter character = (SmashCharacter) v.getTag();
                 Intent intent = new Intent(context, FlashCardActivity.class);
                 intent.putExtra("character", character);
                 context.startActivity(intent);
                 break;
         }
     }
-
-   /* @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.rootItem) {
-            Context context = v.getContext();
-            JSONObject character = (JSONObject) v.getTag();
-            Intent intent = new Intent(context, MainActivity.class);
-            intent.putExtra("question", character);
-            context.startActivity(intent);
-        }
-    }*/
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -81,8 +73,6 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            // Récupération des items de la view
             image = itemView.findViewById(R.id.characterImageView);
             charName = itemView.findViewById(R.id.characterTextView);
         }
