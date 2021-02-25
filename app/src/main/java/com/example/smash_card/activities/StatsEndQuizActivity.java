@@ -1,23 +1,16 @@
-package com.example.smash_card;
+package com.example.smash_card.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
-import org.json.JSONException;
+import com.example.smash_card.R;
 
-import java.io.IOException;
-
-public class StatsEndQuiz extends AppCompatActivity implements View.OnClickListener {
+public class StatsEndQuizActivity extends AppCompatActivity implements View.OnClickListener {
 
 
     @Override
@@ -46,14 +39,14 @@ public class StatsEndQuiz extends AppCompatActivity implements View.OnClickListe
 
         switch (v.getId()) {
             case R.id.buttonBackHome:
-                Intent intent = new Intent(StatsEndQuiz.this, HomeActivity.class);
-                StatsEndQuiz.this.startActivity(intent);
+                Intent intent = new Intent(StatsEndQuizActivity.this, HomeActivity.class);
+                StatsEndQuizActivity.this.startActivity(intent);
                 break;
         }
     }
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(StatsEndQuiz.this, HomeActivity.class);
-        StatsEndQuiz.this.startActivity(intent);
+        Intent intent = new Intent(StatsEndQuizActivity.this, HomeActivity.class);
+        StatsEndQuizActivity.this.startActivity(intent);
     }
 }

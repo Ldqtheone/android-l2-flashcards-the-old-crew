@@ -2,7 +2,6 @@ package com.example.smash_card;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.smash_card.activities.FlashCardActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -56,7 +56,7 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
             case R.id.rootItem:
                 Context context = v.getContext();
                 Characters character = (Characters) v.getTag();
-                Intent intent = new Intent(context, FlashCard.class);
+                Intent intent = new Intent(context, FlashCardActivity.class);
                 intent.putExtra("character", character);
                 context.startActivity(intent);
                 break;

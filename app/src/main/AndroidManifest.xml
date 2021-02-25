@@ -13,19 +13,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmashCard"
         android:usesCleartextTraffic="true">
-        <activity android:name=".CharacterListActivity"></activity>
-        <activity android:name=".FlashCard"></activity>
-        <activity android:name=".About" />
-        <activity android:name=".HomeActivity">
+        <activity android:name=".activities.CharacterListActivity"></activity>
+        <activity android:name=".activities.FlashCardActivity"></activity>
+        <activity android:name=".activities.AboutActivity" />
+        <activity android:name=".activities.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".FullScreenImageActivity" />
-        <activity android:name=".MainActivity" />
-        <activity android:name=".StatsEndQuiz" />
+        <activity android:name=".activities.FullScreenImageActivity" />
+        <activity android:name=".activities.MainActivity" />
+        <activity android:name=".activities.StatsEndQuizActivity" />
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

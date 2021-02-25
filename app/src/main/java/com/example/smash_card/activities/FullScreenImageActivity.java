@@ -1,4 +1,4 @@
-package com.example.smash_card;
+package com.example.smash_card.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.widget.ImageView;
 
+import com.example.smash_card.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;

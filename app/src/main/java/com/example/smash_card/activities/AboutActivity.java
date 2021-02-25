@@ -1,4 +1,4 @@
-package com.example.smash_card;
+package com.example.smash_card.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,7 +8,9 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.TextView;
 
-public class About extends AppCompatActivity {
+import com.example.smash_card.R;
+
+public class AboutActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

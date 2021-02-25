@@ -1,9 +1,14 @@
-package com.example.smash_card;
+package com.example.smash_card.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
+
+import com.example.smash_card.CharacterAdapter;
+import com.example.smash_card.Characters;
+import com.example.smash_card.R;
+
 import java.util.List;
 
 public class CharacterListActivity extends AppCompatActivity {

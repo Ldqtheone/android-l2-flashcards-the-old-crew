@@ -1,4 +1,4 @@
-package com.example.smash_card;
+package com.example.smash_card.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,7 +12,6 @@ import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,16 +19,20 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.example.smash_card.Characters;
+import com.example.smash_card.Question;
+import com.example.smash_card.R;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static com.example.smash_card.Utils.generateMediaplayer;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
 
@@ -60,7 +63,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         answeredImageView.setVisibility(View.INVISIBLE);
         this.confirmButton = findViewById(R.id.confirmButton);
         this.confirmButton.setEnabled(false);
-
+        if (this.numberQuestion == 10) {
+            this.confirmButton.setText("Finish !");
+        }
         this.radioGroup = findViewById(R.id.radioGroup);
         RadioButton radioButtonGenerated;
 
@@ -114,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.radioGroup = findViewById(R.id.radioGroup);
         RadioButton selected = findViewById(this.radioGroup.getCheckedRadioButtonId());
         Context context = v.getContext();
-        MediaPlayer mediaPlayer = new MediaPlayer();
+
 
         try {
             switch (v.getId()) {
@@ -137,13 +142,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
 
                 case R.id.audioButton:
-                    AssetFileDescriptor sample = this.getApplicationContext()
+                    generateMediaplayer(this.getApplicationContext()
                             .getResources()
                             .getAssets()
-                            .openFd("SSBU_SOUNDS/" + this.goodAnswer.getFileName() + ".wav");
-                    mediaPlayer.setDataSource(sample.getFileDescriptor(), sample.getStartOffset(), sample.getLength());
-                    mediaPlayer.prepare();
-                    mediaPlayer.start();
+                            .openFd("SSBU_SOUNDS/" + this.goodAnswer.getFileName() + ".wav"));
                     break;
             }
         } catch (JSONException | IOException e) {
@@ -157,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             this.numberQuestion += 1;
             intent = new Intent(context, MainActivity.class);
         } else {
-            intent = new Intent(context, StatsEndQuiz.class);
+            intent = new Intent(context, StatsEndQuizActivity.class);
         }
         intent.putExtra("score", this.score);
         intent.putExtra("numberQuestion", this.numberQuestion);

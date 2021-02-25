@@ -1,4 +1,4 @@
-package com.example.smash_card;
+package com.example.smash_card.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,12 +14,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.smash_card.Characters;
+import com.example.smash_card.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-public class FlashCard extends AppCompatActivity implements View.OnClickListener {
+import static com.example.smash_card.Utils.generateMediaplayer;
+
+public class FlashCardActivity extends AppCompatActivity implements View.OnClickListener {
     private Characters character;
 
     @Override
@@ -52,9 +56,7 @@ public class FlashCard extends AppCompatActivity implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-
         Context context = v.getContext();
-        MediaPlayer mediaPlayer = new MediaPlayer();
         Intent intent;
         try {
             switch (v.getId()) {
@@ -74,13 +76,11 @@ public class FlashCard extends AppCompatActivity implements View.OnClickListener
                     break;
 
                 case R.id.playSoundButton:
-                    AssetFileDescriptor sample = this.getApplicationContext()
+                    generateMediaplayer(this.getApplicationContext()
                             .getResources()
                             .getAssets()
-                            .openFd("SSBU_SOUNDS/" + this.character.getFileName() + ".wav");
-                    mediaPlayer.setDataSource(sample.getFileDescriptor(), sample.getStartOffset(), sample.getLength());
-                    mediaPlayer.prepare();
-                    mediaPlayer.start();
+                            .openFd("SSBU_SOUNDS/" + this.character.getFileName() + ".wav"));
+
                     break;
             }
         } catch (IOException e) {
