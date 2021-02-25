@@ -3,10 +3,15 @@ package com.example.smash_card;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class FullScreenImageActivity extends AppCompatActivity {
 
@@ -18,6 +23,22 @@ public class FullScreenImageActivity extends AppCompatActivity {
         Intent srcIntent = this.getIntent();
 
         ImageView fullScreenImageView = findViewById(R.id.fullScreenImageView);
-        Picasso.get().load(srcIntent.getStringExtra("image")).into(fullScreenImageView);
+
+        switch (srcIntent.getStringExtra("mode")) {
+            case "Noob":
+                Picasso.get().load(srcIntent.getStringExtra("image")).into(fullScreenImageView);
+                break;
+            case "Pro":
+                try {
+                    InputStream is = this.getApplicationContext()
+                    .getResources()
+                    .getAssets()
+                    .open("image_SSBU/" + srcIntent.getStringExtra("imagePro"));
+                    Bitmap bitmap = BitmapFactory.decodeStream(is);
+                    fullScreenImageView.setImageBitmap(bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+        }
     }
 }
