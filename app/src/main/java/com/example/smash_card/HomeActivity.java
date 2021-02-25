@@ -1,31 +1,33 @@
 package com.example.smash_card;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-
-import com.squareup.picasso.Picasso;
-
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Question question;
+    private static final String TAG = "HomeActivity";
+    private List<Characters> characters = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,19 +37,45 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         Button startQuizButton = findViewById(R.id.startQuizButton);
         Button aboutButton = findViewById(R.id.aboutButton);
         Button charactersButton = findViewById(R.id.charactersButton);
-        startQuizButton.setOnClickListener(this);
         aboutButton.setOnClickListener(this);
-        charactersButton.setOnClickListener(this);
+        this.loadDataFromApi(charactersButton, startQuizButton);
+    }
 
-        InputStream datas = null;
+    private void loadDataFromApi(Button charactersButton, Button startQuizButton) {
+        OkHttpClient client = new OkHttpClient();
 
-        try {
-            datas = this.getApplicationContext().getResources().getAssets().open("datas.json");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        this.question = new Question(datas);
+        Request request = new Request.Builder()
+                .url("http://gryt.tech:8080/smashbros/")
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.e(TAG, "onFailure: ", e);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String body = Objects.requireNonNull(response.body()).string();
+
+                try {
+                    JSONObject jsonObject = new JSONObject(body);
+                    JSONArray datas = jsonObject.getJSONArray("datas");
+
+                    for (int i = 0; i < datas.length() -1; i++){
+                        JSONObject character = (JSONObject) datas.get(i);
+                        characters.add(new Characters(character.getString("image"), character.getString("name"), character.getString("filename")));
+                    }
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                charactersButton.setOnClickListener(HomeActivity.this);
+                startQuizButton.setOnClickListener(HomeActivity.this);
+            }
+        });
     }
 
     @Override
@@ -61,15 +89,14 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-//                Intent intent = new Intent(HomeActivity.this, MainActivity.class);
-//                HomeActivity.this.startActivity(intent);
                 break;
             case R.id.aboutButton:
-                Intent intent = new Intent(HomeActivity.this, About.class);
-                HomeActivity.this.startActivity(intent);
+                Intent intentAbout = new Intent(HomeActivity.this, About.class);
+                HomeActivity.this.startActivity(intentAbout);
                 break;
             case R.id.charactersButton:
                 Intent charListIntent = new Intent(HomeActivity.this, CharacterListActivity.class);
+                charListIntent.putParcelableArrayListExtra("characters", (ArrayList<? extends Parcelable>) characters);
                 HomeActivity.this.startActivity(charListIntent);
                 break;
         }
@@ -97,6 +124,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         dialog.cancel();
                         Intent intent = new Intent(context, MainActivity.class);
                         intent.putExtra("mode", selectedItems.get(0));
+                        intent.putParcelableArrayListExtra("characters", (ArrayList<? extends Parcelable>) characters);
                         context.startActivity(intent);
                     }
                 });
@@ -104,4 +132,23 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         AlertDialog alert11 = builder1.create();
         alert11.show();
     }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+
+        builder1.setMessage("Êtes-vous sûr de vouloir quitter Super Smash Card ?")
+                .setCancelable(true)
+                .setPositiveButton(
+                        "Ok",
+                        (dialog, id) -> {
+                            dialog.cancel();
+                            finishAffinity();
+                        })
+                .setNegativeButton("Annuler", (dialog, id) -> dialog.cancel());
+
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
+    }
+
 }
