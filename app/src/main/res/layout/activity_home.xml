@@ -7,42 +7,48 @@
     android:background="@drawable/ssbu_background"
     tools:context=".activities.HomeActivity">
 
+
     <Button
         android:id="@+id/charactersButton"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:text="Personnages"
+        android:layout_width="129dp"
+        android:layout_height="122dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:foreground="@drawable/character_smb"
+        app:backgroundTint="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/aboutButton"
         app:layout_constraintTop_toTopOf="parent"
-        app:strokeColor="#000000"
-        app:strokeWidth="2dp" />
-
+        app:strokeColor="@android:color/transparent"
+        app:strokeWidth="0dp" />
 
     <Button
+        android:id="@+id/aboutButton"
+        android:layout_width="98dp"
+        android:layout_height="90dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:foreground="@drawable/about_smb"
+        app:backgroundTint="@android:color/transparent"
+        app:iconTint="#FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="@android:color/transparent"
+        app:strokeWidth="0dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/startQuizButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Smash"
-        app:icon="@android:drawable/ic_media_play"
+        android:layout_width="241dp"
+        android:layout_height="240dp"
+        android:clickable="true"
+        android:foreground="@drawable/logo_smb"
+        app:backgroundTint="@android:color/transparent"
+        app:elevation="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:strokeColor="#0E0A0A"
-        app:strokeWidth="2dp" />
-
-    <Button
-        android:id="@+id/aboutButton"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:text="A Propos"
-        app:layout_constraintEnd_toStartOf="@+id/charactersButton"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:strokeColor="#070707"
-        app:strokeWidth="2dp" />
+        app:srcCompat="@drawable/logo_smb" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

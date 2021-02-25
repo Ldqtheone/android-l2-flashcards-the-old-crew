@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Smash-Card</string>
+    <string name="app_name">Super-Smash-Card</string>
+    <string name="extended_fab_label">Start</string>
 </resources>

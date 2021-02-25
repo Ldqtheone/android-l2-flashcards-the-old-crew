@@ -13,6 +13,7 @@ import android.widget.Button;
 import com.example.smash_card.MusicPlayerService;
 import com.example.smash_card.SmashCharacter;
 import com.example.smash_card.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -37,16 +38,16 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final String TAG = "HomeActivity";
     private List<SmashCharacter> characters = new ArrayList<>();
-//    private MusicPlayer musicPlayer = new MusicPlayer();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Intent intent = new Intent(HomeActivity.this, MusicPlayerService.class);
-        intent.putExtra("url", "http://gamethemesongs.com/song/download/26035");
+        intent.putExtra("url", "http://www.feplanet.net/files/scripts/music.php?song=1592");
         startService(intent);
-        Button startQuizButton = findViewById(R.id.startQuizButton);
+        FloatingActionButton startQuizButton = findViewById(R.id.startQuizButton);
         Button aboutButton = findViewById(R.id.aboutButton);
         Button charactersButton = findViewById(R.id.charactersButton);
         aboutButton.setOnClickListener(this);
@@ -58,7 +59,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
      * @param charactersButton
      * @param startQuizButton
      */
-    private void loadDataFromApi(Button charactersButton, Button startQuizButton) {
+    private void loadDataFromApi(Button charactersButton, FloatingActionButton startQuizButton) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url("http://gryt.tech:8080/smashbros/")

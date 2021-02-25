@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -18,6 +19,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.example.smash_card.MusicPlayerService;
 import com.example.smash_card.SmashCharacter;
 import com.example.smash_card.InfoGame;
 import com.example.smash_card.Question;
@@ -45,7 +47,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private List<SmashCharacter> characters = new ArrayList<>();
     private List<SmashCharacter> charactersAnswers = new ArrayList<>();
     private InfoGame infoGame = new InfoGame();
-//    private MusicPlayer musicPlayer = new MusicPlayer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +116,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         this.radioGroup.setOnCheckedChangeListener(this);
     }
 
+
     @Override
     public void onClick(View v) {
 
@@ -126,7 +128,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         try {
             switch (v.getId()) {
                 case R.id.confirmButton:
-                    this.getValueIntent();
                     if (selected.getText().toString().equals(this.goodAnswer.getName())) {
                         this.infoGame.increaseScoreByOne();
                         handleConfirm(context);
@@ -168,10 +169,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             this.infoGame.increaseNumberQuestionByOne();
             intent = new Intent(context, GameActivity.class);
         } else {
-//            this.musicPlayer.stopSound();
             intent = new Intent(context, StatsEndQuizActivity.class);
+            stopService(new Intent(GameActivity.this, MusicPlayerService.class));
         }
         intent.putExtra("infoGame", infoGame);
+        intent.putExtra("startMusic", true);
         intent.putParcelableArrayListExtra("characters", (ArrayList<? extends Parcelable>) this.characters);
         context.startActivity(intent);
     }
@@ -184,11 +186,27 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (srcIntent.getParcelableExtra("infoGame") != null) {
             this.infoGame = srcIntent.getParcelableExtra("infoGame");
         }
-
         if (srcIntent.getStringExtra("mode") != null) {
-//            this.musicPlayer.playSound("http://www.feplanet.net/files/scripts/music.php?song=1595");
             this.infoGame.setMode(srcIntent.getStringExtra("mode"));
+            Intent intent = new Intent(GameActivity.this, MusicPlayerService.class);
+            switch (srcIntent.getStringExtra("mode")){
+                case "Noob":
+                    intent.putExtra("url", "http://www.feplanet.net/files/scripts/music.php?song=1595");
+                    startService(intent);
+                    break;
+                case "Pro":
+                    intent.putExtra("url", "http://www.feplanet.net/files/scripts/music.php?song=1606");
+                    startService(intent);
+                    break;
+                case "VIP":
+                    intent.putExtra("url", "http://www.feplanet.net/files/scripts/music.php?song=1596");
+                    startService(intent);
+                    break;
+            }
         }
+
+
+
 
         this.characters = srcIntent.getParcelableArrayListExtra("characters");
     }
@@ -207,6 +225,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                             dialog.cancel();
 //                            GameActivity.this.musicPlayer.stopSound();
                             Intent intent = new Intent(GameActivity.this, HomeActivity.class);
+                            stopService(new Intent(GameActivity.this, MusicPlayerService.class));
                             GameActivity.this.startActivity(intent);
                         })
                 .setNegativeButton("Annuler", (dialog, id) -> dialog.cancel());

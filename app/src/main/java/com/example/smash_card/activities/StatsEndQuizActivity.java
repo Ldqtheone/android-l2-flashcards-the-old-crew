@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.smash_card.InfoGame;
+import com.example.smash_card.MusicPlayerService;
 import com.example.smash_card.R;
 
 /**
@@ -22,6 +23,10 @@ public class StatsEndQuizActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats_end_quiz);
         InfoGame infoGame = getIntent().getParcelableExtra("infoGame");
+
+        Intent intent = new Intent(StatsEndQuizActivity.this, MusicPlayerService.class);
+        intent.putExtra("url", "http://www.feplanet.net/files/scripts/music.php?song=1599");
+        startService(intent);
 
         int score = infoGame.getScore();
         int question = infoGame.getNumberQuestion();
@@ -46,6 +51,7 @@ public class StatsEndQuizActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         if (v.getId() == R.id.buttonBackHome) {
             Intent intent = new Intent(StatsEndQuizActivity.this, HomeActivity.class);
+            stopService(new Intent(StatsEndQuizActivity.this, MusicPlayerService.class));
             StatsEndQuizActivity.this.startActivity(intent);
         }
     }
@@ -56,6 +62,7 @@ public class StatsEndQuizActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(StatsEndQuizActivity.this, HomeActivity.class);
+        stopService(new Intent(StatsEndQuizActivity.this, MusicPlayerService.class));
         StatsEndQuizActivity.this.startActivity(intent);
     }
 }
