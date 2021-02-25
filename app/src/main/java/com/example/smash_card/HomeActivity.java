@@ -15,11 +15,17 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private Question question;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,10 +34,20 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
         Button startQuizButton = findViewById(R.id.startQuizButton);
         Button aboutButton = findViewById(R.id.aboutButton);
+        Button charactersButton = findViewById(R.id.charactersButton);
         startQuizButton.setOnClickListener(this);
         aboutButton.setOnClickListener(this);
+        charactersButton.setOnClickListener(this);
 
+        InputStream datas = null;
 
+        try {
+            datas = this.getApplicationContext().getResources().getAssets().open("datas.json");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        this.question = new Question(datas);
     }
 
     @Override
@@ -51,6 +67,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.aboutButton:
                 Intent intent = new Intent(HomeActivity.this, About.class);
                 HomeActivity.this.startActivity(intent);
+                break;
+            case R.id.charactersButton:
+                Intent charListIntent = new Intent(HomeActivity.this, CharacterListActivity.class);
+                HomeActivity.this.startActivity(charListIntent);
                 break;
         }
     }

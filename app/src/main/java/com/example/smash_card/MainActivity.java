@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private JSONObject goodAnswer;
     private RadioGroup radioGroup;
     private Button confirmButton;
-
+    
     private int score;
     private int numberQuestion;
     private String mode;
@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         InputStream datas;
         Question question = null;
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Collections.shuffle(characters);
 
         try {
-            switch (this.mode) {
+            switch (this.mode){
                 case "Noob":
                     answeredImageView.setVisibility(View.VISIBLE);
                     Picasso.get().load(this.goodAnswer.getString("image")).into(answeredImageView);
@@ -94,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
 
 
-            for (int i = 0; i < 4; i++) {
+            for(int i = 0; i < 4; i++) {
                 radioButtonGenerated = new RadioButton(this);
                 radioButtonGenerated.setText(characters.get(i).getString("name"));
                 this.radioGroup.addView(radioButtonGenerated);
@@ -171,6 +172,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.mode = srcIntent.getStringExtra("mode");
         this.score = srcIntent.getIntExtra("score", 0);
         this.numberQuestion = srcIntent.getIntExtra("numberQuestion", 1);
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+
+        builder1.setMessage("Êtes-vous sûr de vouloir retourner à l'accueil ?")
+                .setCancelable(true)
+                .setPositiveButton(
+                        "Ok",
+                        (dialog, id) -> {
+                            dialog.cancel();
+                            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                            MainActivity.this.startActivity(intent);
+                        })
+                .setNegativeButton("Annuler", (dialog, id) -> dialog.cancel());
+
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
     }
 
     @Override
