@@ -1,8 +1,5 @@
 package com.example.smash_card;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,59 +9,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Question implements Parcelable {
+public class Question {
 
     private InputStream dataJson;
     private JSONObject charactersData;
-    private List<JSONObject> characters;
-
-    public int getTest() {
-        return test;
-    }
-
-    private int test;
-
-    public List<JSONObject> getCharacters() {
-        return characters;
-    }
 
     public Question(InputStream dataJson) {
         this.dataJson = dataJson;
         this.charactersData = this.loadJSONFromAsset();
-        this.characters = this.getCharactersData();
-        this.test = 87;
     }
 
-    protected Question(Parcel in) {
-        in.readList(characters, List.class.getClassLoader());
-        test = in.readInt();
-    }
-
-    public static final Creator<Question> CREATOR = new Creator<Question>() {
-        @Override
-        public Question createFromParcel(Parcel in) {
-            return new Question(in);
-        }
-
-        @Override
-        public Question[] newArray(int size) {
-            return new Question[size];
-        }
-    };
-
-    public List<JSONObject> getCharactersData() {
-        List<JSONObject> characters = new ArrayList<>();
-
-        try {
-            for (int i = 0; i < charactersData.getJSONArray("datas").length(); i++) {
-                characters.add(charactersData.getJSONArray("datas").getJSONObject(i));
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return characters;
+    public JSONObject getCharactersData() {
+        return charactersData;
     }
 
     private JSONObject loadJSONFromAsset() {
@@ -144,14 +100,5 @@ public class Question implements Parcelable {
 
         Random r = new Random();
         return r.nextInt((max - min) + 1) + min;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
     }
 }

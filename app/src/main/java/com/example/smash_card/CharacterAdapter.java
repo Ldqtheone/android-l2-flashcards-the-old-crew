@@ -1,7 +1,5 @@
 package com.example.smash_card;
 
-import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,18 +11,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.List;
 
 public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.ViewHolder>{
 
-    private List<JSONObject> question;
+    private List<Characters> characters;
 
-    public CharacterAdapter(List<JSONObject> question) {
-        this.question = question;
+    public CharacterAdapter(List<Characters> characters) {
+        this.characters = characters;
     }
 
     @NonNull
@@ -39,20 +33,16 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
     @Override
     public void onBindViewHolder(@NonNull CharacterAdapter.ViewHolder holder, int position) {
 
-        try {
-            JSONObject allchars = this.question.get(position);
-            Picasso.get().load(allchars.getString("image")).into(holder.image);
-            holder.charName.setText(allchars.getString("name"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        Characters character = characters.get(position);
+        Picasso.get().load(character.getImage()).into(holder.image);
+        holder.charName.setText(character.getName());
 
         //holder.itemView.setOnClickListener(this);
     }
 
     @Override
     public int getItemCount() {
-        return this.question.size();
+        return this.characters.size();
     }
 
    /* @Override

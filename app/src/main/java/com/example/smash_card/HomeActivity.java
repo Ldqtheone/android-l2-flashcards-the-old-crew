@@ -72,9 +72,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 HomeActivity.this.startActivity(intent);
                 break;
             case R.id.charactersButton:
-                Log.i("TestTag", "onClick: " + this.question.getTest());
                 Intent charListIntent = new Intent(HomeActivity.this, CharacterListActivity.class);
-                charListIntent.putExtra("question", this.question);
                 HomeActivity.this.startActivity(charListIntent);
                 break;
         }

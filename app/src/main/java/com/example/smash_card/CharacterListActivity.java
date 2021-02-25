@@ -4,15 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,6 +26,7 @@ import okhttp3.Response;
 public class CharacterListActivity extends AppCompatActivity {
 
     public static final String TAG = "CharacterListActivity";
+    private List<Characters> characters;
     private CharacterAdapter adapter;
 
     @Override
@@ -32,19 +34,18 @@ public class CharacterListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_character_list);
 
-        Intent question = getIntent();
-        Question q = question.getParcelableExtra("question");
+        characters = new ArrayList<>();
 
-        Log.i(TAG, "onCreate: " + q.getTest());
+        loadCharsFromApi();
 
-        adapter = new CharacterAdapter(q.getCharacters());
+        adapter = new CharacterAdapter(characters);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    /*private void loadCharsFromApi() {
+    private void loadCharsFromApi() {
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
@@ -60,19 +61,15 @@ public class CharacterListActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 String body = Objects.requireNonNull(response.body()).string();
-                Log.i(TAG, "onResponse: body = " + body);
 
                 try {
                     JSONObject jsonObject = new JSONObject(body);
-                    JSONObject rates = jsonObject.getJSONObject("rate");
+                    JSONArray datas = jsonObject.getJSONArray("datas");
 
-                    float usd = (float) rates.getDouble("USD");
-                    float jpy = (float) rates.getDouble("JPY");
-                    float gbp = (float) rates.getDouble("GBP");
-
-                    currencies.add(new Currency(R.drawable.flag_england, gbp, "£"));
-                    currencies.add(new Currency(R.drawable.flag_japan, jpy, "Y"));
-                    currencies.add(new Currency(R.drawable.flag_usa, usd, "$"));
+                    for (int i = 0; i < datas.length() -1; i++){
+                        JSONObject character = (JSONObject) datas.get(i);
+                        characters.add(new Characters(character.getString("image"), character.getString("name"), character.getString("filename")));
+                    }
 
                     // J'ai modifié données donc rafraichie l'UI
                     runOnUiThread(() -> adapter.notifyDataSetChanged());
@@ -85,5 +82,5 @@ public class CharacterListActivity extends AppCompatActivity {
         });
 
         Log.i(TAG, "loadRatesFromApi: Started HTTP Request");
-    }*/
+    }
 }
