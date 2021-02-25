@@ -2,6 +2,7 @@ package com.example.smash_card;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,7 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
         Characters character = characters.get(position);
         Picasso.get().load(character.getImage()).into(holder.image);
         holder.charName.setText(character.getName());
+        holder.itemView.setTag(character);
         holder.itemView.setOnClickListener(this);
 
     }
@@ -49,10 +51,13 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
 
     @Override
     public void onClick(View v) {
+
         switch (v.getId()) {
             case R.id.rootItem:
                 Context context = v.getContext();
-                Intent intent = new Intent(context, MainActivity.class);
+                Characters character = (Characters) v.getTag();
+                Intent intent = new Intent(context, FlashCard.class);
+                intent.putExtra("character", character);
                 context.startActivity(intent);
                 break;
         }
