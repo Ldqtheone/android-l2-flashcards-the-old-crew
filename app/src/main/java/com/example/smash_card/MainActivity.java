@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         InputStream datas;
         Question question = null;
         try {
@@ -52,8 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        List<JSONObject> characters =  question.getRandomCharacter();
+        List<JSONObject> characters = question.getRandomCharacter();
 
         this.getValueIntent();
         TextView questionIndexTextView = findViewById(R.id.questionIndexTextView);
@@ -118,31 +118,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Context context = v.getContext();
         MediaPlayer mediaPlayer = new MediaPlayer();
 
-        try{
-            switch (v.getId()){
+        try {
+            switch (v.getId()) {
                 case R.id.confirmButton:
                     this.getValueIntent();
-                    this.numberQuestion += 1;
-
-                    if(this.numberQuestion <= 10) {
-                        if (selected.getText().toString().equals(this.goodAnswer.getString("name"))) {
-                            Log.i("answer", "Victory");
-                            this.score += 1;
-                            Log.i("Score", "onClick: " + this.score);
-                            Intent intent = new Intent(context, MainActivity.class);
-                            intent.putExtra("score", this.score);
-                            intent.putExtra("numberQuestion", this.numberQuestion);
-                            intent.putExtra("mode", this.mode);
-                            context.startActivity(intent);
-                        } else {
-                            alertWrongAnswer(context, this.score, this.numberQuestion, this.mode);
-                        }
+                    if (selected.getText().toString().equals(this.goodAnswer.getString("name"))) {
+                        this.score += 1;
+                        handleConfirm(context);
+                    } else {
+                        alertWrongAnswer(context);
                     }
-                    else {
-                        Log.i("Score", "onClick: Ecran de score");
-                    }
-                    
                     break;
+
                 case R.id.answeredImageView:
                     Intent intent = new Intent(context, FullScreenImageActivity.class);
                     intent.putExtra("image", this.goodAnswer.getString("image"));
@@ -150,19 +137,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     intent.putExtra("mode", this.mode);
                     context.startActivity(intent);
                     break;
+
                 case R.id.audioButton:
                     AssetFileDescriptor sample = this.getApplicationContext()
                             .getResources()
                             .getAssets()
                             .openFd("SSBU_SOUNDS/" + this.goodAnswer.getString("filename") + ".wav");
-                    mediaPlayer.setDataSource(sample.getFileDescriptor(),sample.getStartOffset(),sample.getLength());
+                    mediaPlayer.setDataSource(sample.getFileDescriptor(), sample.getStartOffset(), sample.getLength());
                     mediaPlayer.prepare();
                     mediaPlayer.start();
                     break;
             }
-        }catch (JSONException | IOException e) {
+        } catch (JSONException | IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void handleConfirm(Context context) {
+        Intent intent;
+        if (this.numberQuestion < 10) {
+            this.numberQuestion += 1;
+            intent = new Intent(context, MainActivity.class);
+        } else {
+            intent = new Intent(context, StatsEndQuiz.class);
+        }
+        intent.putExtra("score", this.score);
+        intent.putExtra("numberQuestion", this.numberQuestion);
+        intent.putExtra("mode", this.mode);
+        context.startActivity(intent);
+    }
+
+    private void getValueIntent() {
+        Intent srcIntent = getIntent();
+        this.mode = srcIntent.getStringExtra("mode");
+        this.score = srcIntent.getIntExtra("score", 0);
+        this.numberQuestion = srcIntent.getIntExtra("numberQuestion", 1);
     }
 
     @Override
@@ -184,32 +193,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         alert11.show();
     }
 
-    private void getValueIntent() {
-        Intent srcIntent = getIntent();
-        this.mode = srcIntent.getStringExtra("mode");
-        this.score = srcIntent.getIntExtra("score", 0);
-        this.numberQuestion = srcIntent.getIntExtra("numberQuestion", 1);
-    }
-
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         this.confirmButton = findViewById(R.id.confirmButton);
         this.confirmButton.setEnabled(true);
     }
 
-    private void alertWrongAnswer(Context context, int score, int numberQuestion, String mode) throws JSONException {
+    private void alertWrongAnswer(Context context) throws JSONException {
         AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
         builder1.setMessage("Mauvaise réponse , la réponse est : " + this.goodAnswer.getString("name"))
-                .setCancelable(true)
+                .setCancelable(false)
                 .setPositiveButton(
-                "Ok",
-                        (dialog, id) -> {
-                            dialog.cancel();
-                            Intent intent = new Intent(context, MainActivity.class);
-                            intent.putExtra("score", score);
-                            intent.putExtra("numberQuestion", numberQuestion);
-                            intent.putExtra("mode", mode);
-                            context.startActivity(intent);
+                        "Ok",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                                handleConfirm(context);
+                            }
                         });
 
         AlertDialog alert11 = builder1.create();
