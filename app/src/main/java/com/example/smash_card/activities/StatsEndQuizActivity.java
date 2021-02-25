@@ -38,16 +38,21 @@ public class StatsEndQuizActivity extends AppCompatActivity implements View.OnCl
         buttonBackHome.setOnClickListener(this);
     }
 
+    /**
+     * redirect to home
+     * @param v
+     */
     @Override
     public void onClick(View v) {
-
-        switch (v.getId()) {
-            case R.id.buttonBackHome:
-                Intent intent = new Intent(StatsEndQuizActivity.this, HomeActivity.class);
-                StatsEndQuizActivity.this.startActivity(intent);
-                break;
+        if (v.getId() == R.id.buttonBackHome) {
+            Intent intent = new Intent(StatsEndQuizActivity.this, HomeActivity.class);
+            StatsEndQuizActivity.this.startActivity(intent);
         }
     }
+    /**
+     * redirect to home
+
+     */
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(StatsEndQuizActivity.this, HomeActivity.class);

@@ -25,18 +25,33 @@ public class SmashCharacter implements Parcelable{
         fileName = in.readString();
     }
 
+    /**
+     * get url of the character's image
+     * @return
+     */
     public String getImage() {
         return image;
     }
-
+    /**
+     * get name of the character
+     * @return
+     */
     public String getName() {
         return name;
     }
-
+    /**
+     * get filename of the character's shape and sound
+     * @return
+     */
     public String getFileName() {
         return fileName;
     }
 
+    /**
+     * write characters info in Parcel
+     * @param dest
+     * @param flags
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(image);

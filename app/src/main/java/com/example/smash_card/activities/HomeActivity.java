@@ -28,6 +28,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * Main activity / landing activity
+ */
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "HomeActivity";
@@ -45,10 +48,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         this.loadDataFromApi(charactersButton, startQuizButton);
     }
 
+    /**
+     * Get data from api on home page
+     * @param charactersButton
+     * @param startQuizButton
+     */
     private void loadDataFromApi(Button charactersButton, Button startQuizButton) {
         OkHttpClient client = new OkHttpClient();
-
-
         Request request = new Request.Builder()
                 .url("http://gryt.tech:8080/smashbros/")
                 .build();
@@ -85,7 +91,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         Context context = v.getContext();
-
         switch (v.getId()){
             case R.id.startQuizButton:
                 try {
@@ -106,6 +111,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * open dialog menu to select difficulty then start game or abort
+     * @param context
+     * @throws JSONException
+     */
     private void dialogGameMode(Context context) throws JSONException {
         AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
         String[] mode = new String[] {"Noob","Pro", "VIP"};
@@ -137,6 +147,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         alert11.show();
     }
 
+    /**
+     * exit application
+     */
     @Override
     public void onBackPressed() {
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);

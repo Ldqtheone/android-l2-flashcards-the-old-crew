@@ -11,6 +11,9 @@ import com.example.smash_card.R;
 
 import java.util.List;
 
+/**
+ * Activity to display all characters in banners
+ */
 public class CharacterListActivity extends AppCompatActivity {
 
     public static final String TAG = "CharacterListActivity";

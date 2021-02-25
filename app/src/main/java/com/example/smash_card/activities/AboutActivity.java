@@ -10,6 +10,9 @@ import android.widget.TextView;
 
 import com.example.smash_card.R;
 
+/**
+ * About Activity get info of the app and the godlike crew who made it
+ */
 public class AboutActivity extends AppCompatActivity {
 
     @Override

@@ -52,6 +52,9 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
         return this.characters.size();
     }
 
+    /**
+     * handle click redirect to flashcard view with characters information
+     */
     @Override
     public void onClick(View v) {
 

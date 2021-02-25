@@ -21,6 +21,9 @@ import java.io.InputStream;
 
 import static com.example.smash_card.Utils.playWavSound;
 
+/**
+ * Flash card activity show all infos of a given character
+ */
 public class FlashCardActivity extends AppCompatActivity implements View.OnClickListener {
     private SmashCharacter character;
 

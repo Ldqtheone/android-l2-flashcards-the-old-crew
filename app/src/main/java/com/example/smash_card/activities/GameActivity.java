@@ -33,6 +33,9 @@ import java.util.List;
 
 import static com.example.smash_card.Utils.playWavSound;
 
+/**
+ * quiz activity
+ */
 public class GameActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
 
     private SmashCharacter goodAnswer;
@@ -123,7 +126,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 case R.id.confirmButton:
                     this.getValueIntent();
                     if (selected.getText().toString().equals(this.goodAnswer.getName())) {
-                        this.infoGame.increaseScore();
+                        this.infoGame.increaseScoreByOne();
                         handleConfirm(context);
                     } else {
                         alertWrongAnswer(context);
@@ -150,10 +153,17 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * handle if the quiz is over
+     * redirect to next question if not
+     * redirect to stats screen if over
+     *
+     * @param context
+     */
     private void handleConfirm(Context context) {
         Intent intent;
         if (this.infoGame.getNumberQuestion() < 10) {
-            this.infoGame.increaseNumberQuestion();
+            this.infoGame.increaseNumberQuestionByOne();
             intent = new Intent(context, GameActivity.class);
         } else {
             intent = new Intent(context, StatsEndQuizActivity.class);
@@ -163,6 +173,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         context.startActivity(intent);
     }
 
+    /**
+     * update game's and character's infos
+     */
     private void getValueIntent() {
         Intent srcIntent = getIntent();
         if (srcIntent.getParcelableExtra("infoGame") != null) {
@@ -175,7 +188,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         this.characters = srcIntent.getParcelableArrayListExtra("characters");
     }
-
+    /**
+     * back to home activity
+     */
     @Override
     public void onBackPressed() {
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
@@ -194,13 +209,17 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         AlertDialog alert11 = builder1.create();
         alert11.show();
     }
-
+    /**
+     * set confirm button enabled if a value is selected
+     */
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         this.confirmButton = findViewById(R.id.confirmButton);
         this.confirmButton.setEnabled(true);
     }
-
+    /**
+     * give correction if the answer was wrong
+     */
     private void alertWrongAnswer(Context context) throws JSONException {
         AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
         builder1.setMessage("Mauvaise réponse , la réponse est : " + this.goodAnswer.getName())

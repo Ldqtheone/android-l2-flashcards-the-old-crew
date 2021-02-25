@@ -21,35 +21,43 @@ public class InfoGame implements Parcelable {
         numberQuestion = in.readInt();
     }
 
+    /**
+     * get actual difficulty
+     * @return String
+     */
     public String getMode() {
         return this.mode;
     }
-
+    /**
+     * get actual score
+     * @return int
+     */
     public int getScore() {
         return this.score;
     }
-
+    /**
+     * get actual question number
+     * @return int
+     */
     public int getNumberQuestion() {
         return this.numberQuestion;
     }
-
+    /**
+     * set difficulty
+     */
     public void setMode(String mode) {
         this.mode = mode;
     }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    public void setNumberQuestion(int numberQuestion) {
-        this.numberQuestion = numberQuestion;
-    }
-
-    public void increaseScore() {
+    /**
+     * increase score by one
+     */
+    public void increaseScoreByOne() {
         this.score += 1;
     }
-
-    public void increaseNumberQuestion() {
+    /**
+     * increase question number by one
+     */
+    public void increaseNumberQuestionByOne() {
         this.numberQuestion += 1;
     }
 

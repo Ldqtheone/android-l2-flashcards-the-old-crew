@@ -14,6 +14,9 @@ import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * image in full screen
+ */
 public class FullScreenImageActivity extends AppCompatActivity {
 
     @Override
