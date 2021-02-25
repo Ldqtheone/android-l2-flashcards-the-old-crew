@@ -26,9 +26,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        ImageView backgroundImageView = findViewById(R.id.backgroundImageView);
-        backgroundImageView.setBackgroundResource(R.drawable.ssbu_background);
-
         Button startQuizButton = findViewById(R.id.startQuizButton);
         Button aboutButton = findViewById(R.id.aboutButton);
         startQuizButton.setOnClickListener(this);

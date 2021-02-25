@@ -36,7 +36,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup"
+        app:strokeColor="#000000"
+        app:strokeWidth="2dp"/>
 
     <TextView
         android:id="@+id/questionTextView"
@@ -68,6 +70,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/answeredImageView"
         app:layout_constraintEnd_toEndOf="@+id/answeredImageView"
         app:layout_constraintStart_toStartOf="@+id/answeredImageView"
-        app:layout_constraintTop_toTopOf="@+id/answeredImageView" />
+        app:layout_constraintTop_toTopOf="@+id/answeredImageView"
+        app:strokeColor="#000000"
+        app:strokeWidth="2dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
