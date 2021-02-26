@@ -112,6 +112,11 @@ class com.example.smash_card.activities.HomeActivity {
 - void onAppBackgrounded()
 - void onAppForegrounded()
 }
+class com.example.smash_card.activities.ThemeActivity {
+# void onCreate(Bundle)
++ void onClick(View)
++ void onPrepared(MediaPlayer)
+}
 class com.example.smash_card.activities.FullScreenImageActivity {
 - boolean isContext
 - String urlSong
@@ -156,6 +161,9 @@ android.app.Service <|-- com.example.smash_card.MusicPlayerService
 com.example.smash_card.activities.OnClickListener <|.. com.example.smash_card.activities.HomeActivity
 androidx.lifecycle.LifecycleObserver <|.. com.example.smash_card.activities.HomeActivity
 androidx.appcompat.app.AppCompatActivity <|-- com.example.smash_card.activities.HomeActivity
+com.example.smash_card.activities.OnClickListener <|.. com.example.smash_card.activities.ThemeActivity
+com.example.smash_card.activities.OnPreparedListener <|.. com.example.smash_card.activities.ThemeActivity
+androidx.appcompat.app.AppCompatActivity <|-- com.example.smash_card.activities.ThemeActivity
 androidx.lifecycle.LifecycleObserver <|.. com.example.smash_card.activities.FullScreenImageActivity
 androidx.appcompat.app.AppCompatActivity <|-- com.example.smash_card.activities.FullScreenImageActivity
 com.example.smash_card.activities.OnClickListener <|.. com.example.smash_card.activities.FlashCardActivity
