@@ -1,7 +1,12 @@
 package com.example.smash_card.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.OnLifecycleEvent;
+import androidx.lifecycle.ProcessLifecycleOwner;
 
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -39,8 +44,9 @@ import static com.example.smash_card.Utils.playWavSound;
 /**
  * quiz activity
  */
-public class GameActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
+public class GameActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener, LifecycleObserver {
 
+    private static final String TAG = "GameActibity";
     private SmashCharacter goodAnswer;
     private RadioGroup radioGroup;
     private Button confirmButton;
@@ -48,12 +54,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private List<SmashCharacter> charactersAnswers = new ArrayList<>();
     private InfoGame infoGame = new InfoGame();
     private String urlSong;
+    private boolean isContext;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
 
         this.getValueIntent();
         Question question = new Question(this.characters);
@@ -77,7 +85,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         this.goodAnswer = this.charactersAnswers.get(0);
         this.characters.remove(this.goodAnswer);
         Collections.shuffle(charactersAnswers);
-
 
         switch (this.infoGame.getMode()) {
             case "Noob":
@@ -263,5 +270,29 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         alert11.show();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.isContext = true;
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        this.isContext = false;
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    private void onAppBackgrounded() {
+        stopService(new Intent(GameActivity.this, MusicPlayerService.class));
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    private void onAppForegrounded() {
+        if(this.isContext) {
+            Intent intent = new Intent(GameActivity.this, MusicPlayerService.class);
+            intent.putExtra("url", this.urlSong);
+            startService(intent);
+        }
+    }
 }

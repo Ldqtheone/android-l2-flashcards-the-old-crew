@@ -6,6 +6,7 @@ import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ProcessLifecycleOwner;
 
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -46,7 +47,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final String TAG = "HomeActivity";
     private List<SmashCharacter> characters = new ArrayList<>();
-
+    private boolean isContext = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,18 +186,30 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         alert11.show();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.isContext = true;
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        this.isContext = false;
+    }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     private void onAppBackgrounded() {
         stopService(new Intent(HomeActivity.this, MusicPlayerService.class));
+        this.isContext = false;
     }
+
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     private void onAppForegrounded() {
-        Intent intent = new Intent(HomeActivity.this, MusicPlayerService.class);
-        intent.putExtra("url", "http://www.feplanet.net/files/scripts/music.php?song=1592");
-        startService(intent);
+        if(this.isContext) {
+            Intent intent = new Intent(HomeActivity.this, MusicPlayerService.class);
+            intent.putExtra("url", "http://www.feplanet.net/files/scripts/music.php?song=1592");
+            startService(intent);
+        }
     }
-
-
 }
