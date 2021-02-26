@@ -47,7 +47,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private List<SmashCharacter> characters = new ArrayList<>();
     private List<SmashCharacter> charactersAnswers = new ArrayList<>();
     private InfoGame infoGame = new InfoGame();
-    private String urlSong;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,26 +189,27 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (srcIntent.getStringExtra("mode") != null) {
             this.infoGame.setMode(srcIntent.getStringExtra("mode"));
             Intent intent = new Intent(GameActivity.this, MusicPlayerService.class);
-
-            switch (srcIntent.getStringExtra("mode")) {
+            switch (srcIntent.getStringExtra("mode")){
                 case "Noob":
-                    this.urlSong = "http://www.feplanet.net/files/scripts/music.php?song=1595";
+                    intent.putExtra("url", "http://www.feplanet.net/files/scripts/music.php?song=1595");
+                    startService(intent);
                     break;
                 case "Pro":
-                    this.urlSong = "http://www.feplanet.net/files/scripts/music.php?song=1606";
+                    intent.putExtra("url", "http://www.feplanet.net/files/scripts/music.php?song=1606");
+                    startService(intent);
                     break;
                 case "VIP":
-                    this.urlSong = "http://www.feplanet.net/files/scripts/music.php?song=1596";
+                    intent.putExtra("url", "http://www.feplanet.net/files/scripts/music.php?song=1596");
+                    startService(intent);
                     break;
             }
-            intent.putExtra("url", this.urlSong);
-            startService(intent);
         }
+
+
 
 
         this.characters = srcIntent.getParcelableArrayListExtra("characters");
     }
-
     /**
      * back to home activity
      */
@@ -233,7 +233,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         AlertDialog alert11 = builder1.create();
         alert11.show();
     }
-
     /**
      * set confirm button enabled if a value is selected
      */
@@ -242,7 +241,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         this.confirmButton = findViewById(R.id.confirmButton);
         this.confirmButton.setEnabled(true);
     }
-
     /**
      * give correction if the answer was wrong
      */
@@ -262,6 +260,4 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         AlertDialog alert11 = builder1.create();
         alert11.show();
     }
-
-
 }
