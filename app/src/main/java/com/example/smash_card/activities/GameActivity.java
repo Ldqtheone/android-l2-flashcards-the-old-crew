@@ -1,6 +1,10 @@
 package com.example.smash_card.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.OnLifecycleEvent;
+import androidx.lifecycle.ProcessLifecycleOwner;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -8,10 +12,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -39,20 +41,24 @@ import static com.example.smash_card.Utils.playWavSound;
 /**
  * quiz activity
  */
-public class GameActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
+public class GameActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener, LifecycleObserver {
 
+    private static final String TAG = "GameActibity";
     private SmashCharacter goodAnswer;
     private RadioGroup radioGroup;
     private Button confirmButton;
     private List<SmashCharacter> characters = new ArrayList<>();
     private List<SmashCharacter> charactersAnswers = new ArrayList<>();
     private InfoGame infoGame = new InfoGame();
+    private String urlSong;
+    private boolean isContext;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
 
         this.getValueIntent();
         Question question = new Question(this.characters);
@@ -76,7 +82,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         this.goodAnswer = this.charactersAnswers.get(0);
         this.characters.remove(this.goodAnswer);
         Collections.shuffle(charactersAnswers);
-
 
         switch (this.infoGame.getMode()) {
             case "Noob":
@@ -124,13 +129,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         RadioButton selected = findViewById(this.radioGroup.getCheckedRadioButtonId());
         Context context = v.getContext();
 
-
         try {
             switch (v.getId()) {
                 case R.id.confirmButton:
                     if (selected.getText().toString().equals(this.goodAnswer.getName())) {
                         this.infoGame.increaseScoreByOne();
-
                         handleConfirm(context);
                     } else {
                         alertWrongAnswer(context);
@@ -142,6 +145,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     intent.putExtra("image", this.goodAnswer.getImage());
                     intent.putExtra("imagePro", this.goodAnswer.getFileName() + ".png");
                     intent.putExtra("mode", this.infoGame.getMode());
+                    intent.putExtra("url", this.urlSong);
                     context.startActivity(intent);
                     break;
 
@@ -174,6 +178,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             stopService(new Intent(GameActivity.this, MusicPlayerService.class));
         }
         intent.putExtra("infoGame", infoGame);
+        intent.putExtra("url", this.urlSong);
         intent.putExtra("startMusic", true);
         intent.putParcelableArrayListExtra("characters", (ArrayList<? extends Parcelable>) this.characters);
         context.startActivity(intent);
@@ -187,30 +192,32 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (srcIntent.getParcelableExtra("infoGame") != null) {
             this.infoGame = srcIntent.getParcelableExtra("infoGame");
         }
+
         if (srcIntent.getStringExtra("mode") != null) {
             this.infoGame.setMode(srcIntent.getStringExtra("mode"));
             Intent intent = new Intent(GameActivity.this, MusicPlayerService.class);
-            switch (srcIntent.getStringExtra("mode")){
+
+            switch (srcIntent.getStringExtra("mode")) {
                 case "Noob":
-                    intent.putExtra("url", "http://www.feplanet.net/files/scripts/music.php?song=1595");
-                    startService(intent);
+                    this.urlSong = "http://www.feplanet.net/files/scripts/music.php?song=1595";
                     break;
                 case "Pro":
-                    intent.putExtra("url", "http://www.feplanet.net/files/scripts/music.php?song=1606");
-                    startService(intent);
+                    this.urlSong = "http://www.feplanet.net/files/scripts/music.php?song=1606";
                     break;
                 case "VIP":
-                    intent.putExtra("url", "http://www.feplanet.net/files/scripts/music.php?song=1596");
-                    startService(intent);
+                    this.urlSong = "http://www.feplanet.net/files/scripts/music.php?song=1596";
                     break;
             }
+            intent.putExtra("url", this.urlSong);
+            startService(intent);
+        } else {
+            this.urlSong = srcIntent.getStringExtra("url");
         }
-
-
 
 
         this.characters = srcIntent.getParcelableArrayListExtra("characters");
     }
+
     /**
      * back to home activity
      */
@@ -242,6 +249,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         AlertDialog alert11 = builder1.create();
         alert11.show();
     }
+
     /**
      * set confirm button enabled if a value is selected
      */
@@ -250,6 +258,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         this.confirmButton = findViewById(R.id.confirmButton);
         this.confirmButton.setEnabled(true);
     }
+
     /**
      * give correction if the answer was wrong
      */
@@ -276,5 +285,31 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         AlertDialog alert11 = builder1.create();
         alert11.show();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.isContext = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        this.isContext = false;
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    private void onAppBackgrounded() {
+        stopService(new Intent(GameActivity.this, MusicPlayerService.class));
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    private void onAppForegrounded() {
+        if(this.isContext) {
+            Intent intent = new Intent(GameActivity.this, MusicPlayerService.class);
+            intent.putExtra("url", this.urlSong);
+            startService(intent);
+        }
     }
 }
