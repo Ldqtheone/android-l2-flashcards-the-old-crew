@@ -21,12 +21,14 @@ import com.example.smash_card.R;
  */
 public class StatsEndQuizActivity extends AppCompatActivity implements View.OnClickListener, LifecycleObserver {
 
+    private boolean isContext = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats_end_quiz);
         InfoGame infoGame = getIntent().getParcelableExtra("infoGame");
+
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
 
         int score = infoGame.getScore();
@@ -58,7 +60,6 @@ public class StatsEndQuizActivity extends AppCompatActivity implements View.OnCl
     }
     /**
      * redirect to home
-
      */
     @Override
     public void onBackPressed() {
@@ -67,15 +68,30 @@ public class StatsEndQuizActivity extends AppCompatActivity implements View.OnCl
         StatsEndQuizActivity.this.startActivity(intent);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.isContext = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        this.isContext = false;
+    }
+
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     private void onAppBackgrounded() {
         stopService(new Intent(StatsEndQuizActivity.this, MusicPlayerService.class));
     }
+
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     private void onAppForegrounded() {
-        Intent intent = new Intent(StatsEndQuizActivity.this, MusicPlayerService.class);
-        intent.putExtra("url", "http://www.feplanet.net/files/scripts/music.php?song=1599");
-        startService(intent);
+        if(this.isContext) {
+            Intent intent = new Intent(StatsEndQuizActivity.this, MusicPlayerService.class);
+            intent.putExtra("url", "http://www.feplanet.net/files/scripts/music.php?song=1599");
+            startService(intent);
+        }
     }
 
 }

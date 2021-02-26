@@ -132,7 +132,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         RadioButton selected = findViewById(this.radioGroup.getCheckedRadioButtonId());
         Context context = v.getContext();
 
-
         try {
             switch (v.getId()) {
                 case R.id.confirmButton:
@@ -149,6 +148,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     intent.putExtra("image", this.goodAnswer.getImage());
                     intent.putExtra("imagePro", this.goodAnswer.getFileName() + ".png");
                     intent.putExtra("mode", this.infoGame.getMode());
+                    intent.putExtra("url", this.urlSong);
                     context.startActivity(intent);
                     break;
 
@@ -173,7 +173,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void handleConfirm(Context context) {
         Intent intent;
-        if (this.infoGame.getNumberQuestion() < 10) {
+        if (this.infoGame.getNumberQuestion() < 2) {
             this.infoGame.increaseNumberQuestionByOne();
             intent = new Intent(context, GameActivity.class);
         } else {
@@ -181,6 +181,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             stopService(new Intent(GameActivity.this, MusicPlayerService.class));
         }
         intent.putExtra("infoGame", infoGame);
+        intent.putExtra("url", this.urlSong);
         intent.putExtra("startMusic", true);
         intent.putParcelableArrayListExtra("characters", (ArrayList<? extends Parcelable>) this.characters);
         context.startActivity(intent);
@@ -194,6 +195,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (srcIntent.getParcelableExtra("infoGame") != null) {
             this.infoGame = srcIntent.getParcelableExtra("infoGame");
         }
+
         if (srcIntent.getStringExtra("mode") != null) {
             this.infoGame.setMode(srcIntent.getStringExtra("mode"));
             Intent intent = new Intent(GameActivity.this, MusicPlayerService.class);
@@ -211,6 +213,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             }
             intent.putExtra("url", this.urlSong);
             startService(intent);
+        } else {
+            this.urlSong = srcIntent.getStringExtra("url");
         }
 
 
