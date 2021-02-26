@@ -130,6 +130,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 case R.id.confirmButton:
                     if (selected.getText().toString().equals(this.goodAnswer.getName())) {
                         this.infoGame.increaseScoreByOne();
+                        playWavSound(this.getApplicationContext()
+                                .getResources()
+                                .getAssets()
+                                .openFd("SSBU_ANNOUNCE/great.wav"));
                         handleConfirm(context);
                     } else {
                         alertWrongAnswer(context);
@@ -222,6 +226,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 .setPositiveButton(
                         "Ok",
                         (dialog, id) -> {
+                            try {
+                                playWavSound(this.getApplicationContext()
+                                        .getResources()
+                                        .getAssets()
+                                        .openFd("SSBU_ANNOUNCE/abortgame.wav"));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                             dialog.cancel();
 //                            GameActivity.this.musicPlayer.stopSound();
                             Intent intent = new Intent(GameActivity.this, HomeActivity.class);
@@ -245,6 +257,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
      * give correction if the answer was wrong
      */
     private void alertWrongAnswer(Context context) throws JSONException {
+        try {
+            playWavSound(this.getApplicationContext()
+                    .getResources()
+                    .getAssets()
+                    .openFd("SSBU_ANNOUNCE/failure.wav"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
         builder1.setMessage("Mauvaise réponse , la réponse est : " + this.goodAnswer.getName())
                 .setCancelable(false)

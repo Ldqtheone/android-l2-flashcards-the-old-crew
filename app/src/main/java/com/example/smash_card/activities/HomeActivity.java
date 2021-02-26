@@ -30,6 +30,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import static com.example.smash_card.Utils.playWavSound;
 
 /**
  * Main activity / landing activity
@@ -100,16 +101,40 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()){
             case R.id.startQuizButton:
                 try {
+                    playWavSound(this.getApplicationContext()
+                            .getResources()
+                            .getAssets()
+                            .openFd("SSBU_ANNOUNCE/ready.wav"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
                     this.dialogGameMode(context);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 break;
             case R.id.aboutButton:
+                try {
+                    playWavSound(this.getApplicationContext()
+                            .getResources()
+                            .getAssets()
+                            .openFd("SSBU_ANNOUNCE/team.wav"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 Intent intentAbout = new Intent(HomeActivity.this, AboutActivity.class);
                 HomeActivity.this.startActivity(intentAbout);
                 break;
             case R.id.charactersButton:
+                try {
+                    playWavSound(this.getApplicationContext()
+                            .getResources()
+                            .getAssets()
+                            .openFd("SSBU_ANNOUNCE/choosecharacter.wav"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 Intent charListIntent = new Intent(HomeActivity.this, CharacterListActivity.class);
                 charListIntent.putParcelableArrayListExtra("characters", (ArrayList<? extends Parcelable>) characters);
                 HomeActivity.this.startActivity(charListIntent);
@@ -134,7 +159,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     public void onClick(DialogInterface dialog, int which) {
                         selectedItems.clear();
                         selectedItems.add(Arrays.asList(mode).get(which));
-                        Log.i("test", "onClick: " + selectedItems);
                     }
                 })
                 .setPositiveButton(
@@ -143,6 +167,14 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                         stopService(new Intent(HomeActivity.this, MusicPlayerService.class));
+                        try {
+                            playWavSound(getApplicationContext()
+                                    .getResources()
+                                    .getAssets()
+                                    .openFd("SSBU_ANNOUNCE/go.wav"));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         Intent intent = new Intent(context, GameActivity.class);
                         intent.putExtra("mode", selectedItems.get(0));
                         intent.putParcelableArrayListExtra("characters", (ArrayList<? extends Parcelable>) characters);

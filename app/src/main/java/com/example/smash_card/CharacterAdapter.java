@@ -60,6 +60,7 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
 
         switch (v.getId()) {
             case R.id.rootItem:
+
                 Context context = v.getContext();
                 SmashCharacter character = (SmashCharacter) v.getTag();
                 Intent intent = new Intent(context, FlashCardActivity.class);
