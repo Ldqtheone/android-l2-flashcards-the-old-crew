@@ -11,6 +11,10 @@ import android.widget.TextView;
 import com.example.smash_card.InfoGame;
 import com.example.smash_card.R;
 
+import java.io.IOException;
+
+import static com.example.smash_card.Utils.playWavSound;
+
 /**
  * Activity Stats Quiz
  */
@@ -36,6 +40,14 @@ public class StatsEndQuizActivity extends AppCompatActivity implements View.OnCl
         percentText.setText(percent + "%");
         Button buttonBackHome = findViewById(R.id.buttonBackHome);
         buttonBackHome.setOnClickListener(this);
+        try {
+            playWavSound(this.getApplicationContext()
+                    .getResources()
+                    .getAssets()
+                    .openFd("SSBU_ANNOUNCE/finalresults.wav"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
