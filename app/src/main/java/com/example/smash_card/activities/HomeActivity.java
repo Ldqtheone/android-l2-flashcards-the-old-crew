@@ -110,6 +110,14 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.aboutButton:
+                try {
+                    playWavSound(this.getApplicationContext()
+                            .getResources()
+                            .getAssets()
+                            .openFd("SSBU_ANNOUNCE/team.wav"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 Intent intentAbout = new Intent(HomeActivity.this, AboutActivity.class);
                 HomeActivity.this.startActivity(intentAbout);
                 break;
