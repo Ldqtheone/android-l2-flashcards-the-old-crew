@@ -65,6 +65,7 @@ public class FlashCardActivity extends AppCompatActivity implements View.OnClick
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         Bitmap bitmap = BitmapFactory.decodeStream(is);
         characterProImageView.setImageBitmap(bitmap);
         playSoundButton.setOnClickListener(this);
