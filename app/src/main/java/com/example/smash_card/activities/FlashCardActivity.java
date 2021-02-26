@@ -1,6 +1,10 @@
 package com.example.smash_card.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.OnLifecycleEvent;
+import androidx.lifecycle.ProcessLifecycleOwner;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.smash_card.MusicPlayerService;
 import com.example.smash_card.SmashCharacter;
 import com.example.smash_card.R;
 import com.squareup.picasso.Picasso;
@@ -24,13 +29,17 @@ import static com.example.smash_card.Utils.playWavSound;
 /**
  * Flash card activity show all infos of a given character
  */
-public class FlashCardActivity extends AppCompatActivity implements View.OnClickListener {
+public class FlashCardActivity extends AppCompatActivity implements View.OnClickListener, LifecycleObserver {
     private SmashCharacter character;
+    private boolean isContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flash_card);
+
+        ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
+
         ImageView characterNoobImageView = findViewById(R.id.characterNoobImageView);
         ImageView characterProImageView = findViewById(R.id.characterProImageView);
         Button playSoundButton = findViewById(R.id.playSoundButton);
@@ -75,6 +84,7 @@ public class FlashCardActivity extends AppCompatActivity implements View.OnClick
                     intent.putExtra("image", this.character.getImage());
                     intent.putExtra("imagePro", this.character.getFileName() + ".png");
                     intent.putExtra("mode", "Noob");
+                    intent.putExtra("url", "http://www.feplanet.net/files/scripts/music.php?song=1592");
                     context.startActivity(intent);
                     break;
                 case R.id.characterProImageView:
@@ -82,6 +92,7 @@ public class FlashCardActivity extends AppCompatActivity implements View.OnClick
                     intent.putExtra("image", this.character.getImage());
                     intent.putExtra("imagePro", this.character.getFileName() + ".png");
                     intent.putExtra("mode", "Pro");
+                    intent.putExtra("url", "http://www.feplanet.net/files/scripts/music.php?song=1592");
                     context.startActivity(intent);
                     break;
 
@@ -95,6 +106,27 @@ public class FlashCardActivity extends AppCompatActivity implements View.OnClick
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.isContext = true;
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    private void onAppBackgrounded() {
+        stopService(new Intent(FlashCardActivity.this, MusicPlayerService.class));
+        this.isContext = false;
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    private void onAppForegrounded() {
+        if(this.isContext) {
+            Intent intent = new Intent(FlashCardActivity.this, MusicPlayerService.class);
+            intent.putExtra("url", "http://www.feplanet.net/files/scripts/music.php?song=1592");
+            startService(intent);
         }
     }
 
