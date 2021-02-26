@@ -130,10 +130,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 case R.id.confirmButton:
                     if (selected.getText().toString().equals(this.goodAnswer.getName())) {
                         this.infoGame.increaseScoreByOne();
-                        playWavSound(this.getApplicationContext()
-                                .getResources()
-                                .getAssets()
-                                .openFd("SSBU_ANNOUNCE/great.wav"));
+
                         handleConfirm(context);
                     } else {
                         alertWrongAnswer(context);
