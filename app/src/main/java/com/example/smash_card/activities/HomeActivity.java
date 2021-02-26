@@ -9,6 +9,7 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.example.smash_card.MusicPlayerService;
 import com.example.smash_card.SmashCharacter;
@@ -48,9 +49,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent = new Intent(HomeActivity.this, MusicPlayerService.class);
         intent.putExtra("url", "http://www.feplanet.net/files/scripts/music.php?song=1592");
         startService(intent);
-        FloatingActionButton startQuizButton = findViewById(R.id.startQuizButton);
-        Button aboutButton = findViewById(R.id.aboutButton);
-        Button charactersButton = findViewById(R.id.charactersButton);
+        ImageView startQuizButton = findViewById(R.id.startQuizButton);
+        ImageView aboutButton = findViewById(R.id.aboutButton);
+        ImageView charactersButton = findViewById(R.id.charactersButton);
         aboutButton.setOnClickListener(this);
         this.loadDataFromApi(charactersButton, startQuizButton);
     }
@@ -60,7 +61,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
      * @param charactersButton
      * @param startQuizButton
      */
-    private void loadDataFromApi(Button charactersButton, FloatingActionButton startQuizButton) {
+    private void loadDataFromApi(ImageView charactersButton, ImageView startQuizButton) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url("http://gryt.tech:8080/smashbros/")

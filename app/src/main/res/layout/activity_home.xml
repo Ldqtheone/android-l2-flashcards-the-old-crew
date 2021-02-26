@@ -8,47 +8,33 @@
     tools:context=".activities.HomeActivity">
 
 
-    <Button
-        android:id="@+id/charactersButton"
-        android:layout_width="129dp"
-        android:layout_height="122dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:foreground="@drawable/character_smb"
-        app:backgroundTint="@android:color/transparent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:strokeColor="@android:color/transparent"
-        app:strokeWidth="0dp" />
-
-    <Button
+    <ImageView
         android:id="@+id/aboutButton"
-        android:layout_width="98dp"
-        android:layout_height="90dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:foreground="@drawable/about_smb"
-        app:backgroundTint="@android:color/transparent"
-        app:iconTint="#FFFFFF"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:strokeColor="@android:color/transparent"
-        app:strokeWidth="0dp" />
+        app:srcCompat="@drawable/about_smb" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <ImageView
+        android:id="@+id/charactersButton"
+        android:layout_width="152dp"
+        android:layout_height="134dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/character_smb" />
+
+    <ImageView
         android:id="@+id/startQuizButton"
-        android:layout_width="241dp"
-        android:layout_height="240dp"
-        android:clickable="true"
-        android:foreground="@drawable/logo_smb"
-        app:backgroundTint="@android:color/transparent"
-        app:elevation="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/charactersButton"
         app:srcCompat="@drawable/logo_smb" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
