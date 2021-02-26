@@ -50,6 +50,14 @@ public class FlashCardActivity extends AppCompatActivity implements View.OnClick
         Picasso.get().load(this.character.getImage()).into(characterNoobImageView);
         InputStream is = null;
         try {
+            playWavSound(this.getApplicationContext()
+                    .getResources()
+                    .getAssets()
+                    .openFd("SSBU_ANNOUNCE/"+ this.character.getFileName() +".wav"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
             is = this.getApplicationContext()
                     .getResources()
                     .getAssets()

@@ -6,17 +6,14 @@ import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ProcessLifecycleOwner;
 
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -173,7 +170,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void handleConfirm(Context context) {
         Intent intent;
-        if (this.infoGame.getNumberQuestion() < 2) {
+        if (this.infoGame.getNumberQuestion() < 10) {
             this.infoGame.increaseNumberQuestionByOne();
             intent = new Intent(context, GameActivity.class);
         } else {
@@ -233,6 +230,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 .setPositiveButton(
                         "Ok",
                         (dialog, id) -> {
+                            try {
+                                playWavSound(this.getApplicationContext()
+                                        .getResources()
+                                        .getAssets()
+                                        .openFd("SSBU_ANNOUNCE/abortgame.wav"));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                             dialog.cancel();
 //                            GameActivity.this.musicPlayer.stopSound();
                             Intent intent = new Intent(GameActivity.this, HomeActivity.class);
@@ -258,6 +263,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
      * give correction if the answer was wrong
      */
     private void alertWrongAnswer(Context context) throws JSONException {
+        try {
+            playWavSound(this.getApplicationContext()
+                    .getResources()
+                    .getAssets()
+                    .openFd("SSBU_ANNOUNCE/failure.wav"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
         builder1.setMessage("Mauvaise réponse , la réponse est : " + this.goodAnswer.getName())
                 .setCancelable(false)
