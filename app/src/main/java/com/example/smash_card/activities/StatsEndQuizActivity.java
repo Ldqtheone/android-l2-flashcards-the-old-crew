@@ -1,6 +1,10 @@
 package com.example.smash_card.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.OnLifecycleEvent;
+import androidx.lifecycle.ProcessLifecycleOwner;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +19,7 @@ import com.example.smash_card.R;
 /**
  * Activity Stats Quiz
  */
-public class StatsEndQuizActivity extends AppCompatActivity implements View.OnClickListener {
+public class StatsEndQuizActivity extends AppCompatActivity implements View.OnClickListener, LifecycleObserver {
 
 
     @Override
@@ -23,10 +27,7 @@ public class StatsEndQuizActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats_end_quiz);
         InfoGame infoGame = getIntent().getParcelableExtra("infoGame");
-
-        Intent intent = new Intent(StatsEndQuizActivity.this, MusicPlayerService.class);
-        intent.putExtra("url", "http://www.feplanet.net/files/scripts/music.php?song=1599");
-        startService(intent);
+        ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
 
         int score = infoGame.getScore();
         int question = infoGame.getNumberQuestion();
@@ -65,4 +66,16 @@ public class StatsEndQuizActivity extends AppCompatActivity implements View.OnCl
         stopService(new Intent(StatsEndQuizActivity.this, MusicPlayerService.class));
         StatsEndQuizActivity.this.startActivity(intent);
     }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    private void onAppBackgrounded() {
+        stopService(new Intent(StatsEndQuizActivity.this, MusicPlayerService.class));
+    }
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    private void onAppForegrounded() {
+        Intent intent = new Intent(StatsEndQuizActivity.this, MusicPlayerService.class);
+        intent.putExtra("url", "http://www.feplanet.net/files/scripts/music.php?song=1599");
+        startService(intent);
+    }
+
 }
