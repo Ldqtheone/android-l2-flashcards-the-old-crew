@@ -23,7 +23,7 @@ public class MusicPlayerService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         mediaPlayer = MediaPlayer.create(this, Uri.parse(intent.getStringExtra("url")));
         mediaPlayer.setLooping(true);
-        mediaPlayer.setVolume(0.1f, 0.1f);
+        mediaPlayer.setVolume(0.4f, 0.4f);
         mediaPlayer.start();
         return startId;
     }

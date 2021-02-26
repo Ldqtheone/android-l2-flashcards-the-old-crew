@@ -49,27 +49,28 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TAG = "HomeActivity";
     private List<SmashCharacter> characters = new ArrayList<>();
     private boolean isContext = true;
+    private ImageView charactersButton;
+    private ImageView startQuizButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
-
-        ImageView startQuizButton = findViewById(R.id.startQuizButton);
         ImageView aboutButton = findViewById(R.id.aboutButton);
-        ImageView charactersButton = findViewById(R.id.charactersButton);
+        charactersButton = findViewById(R.id.charactersButton);
+        startQuizButton = findViewById(R.id.startQuizButton);
+        this.loadDataFromApi();
         aboutButton.setOnClickListener(this);
-        this.loadDataFromApi(charactersButton, startQuizButton);
+        charactersButton.setOnClickListener(HomeActivity.this);
+        startQuizButton.setOnClickListener(HomeActivity.this);
     }
 
     /**
      * Get data from api on home page
      *
-     * @param charactersButton
-     * @param startQuizButton
      */
-    private void loadDataFromApi(ImageView charactersButton, ImageView startQuizButton) {
+    private void loadDataFromApi() {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url("http://gryt.tech:8080/smashbros/")
@@ -98,8 +99,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                charactersButton.setOnClickListener(HomeActivity.this);
-                startQuizButton.setOnClickListener(HomeActivity.this);
             }
         });
     }
