@@ -8,26 +8,37 @@ class com.example.smash_card.InfoGame {
 + int getScore()
 + int getNumberQuestion()
 + void setMode(String)
-+ void setScore(int)
-+ void setNumberQuestion(int)
-+ void increaseScore()
-+ void increaseNumberQuestion()
++ void increaseScoreByOne()
++ void increaseNumberQuestionByOne()
 + int describeContents()
 + void writeToParcel(Parcel,int)
 }
 class com.example.smash_card.activities.AboutActivity {
+- boolean isContext
 # void onCreate(Bundle)
+# void onStart()
+- void onAppBackgrounded()
+- void onAppForegrounded()
 }
 class com.example.smash_card.activities.CharacterListActivity {
 + {static} String TAG
 - List<SmashCharacter> characters
 - CharacterAdapter adapter
+- boolean isContext
 # void onCreate(Bundle)
+# void onStart()
+- void onAppBackgrounded()
+- void onAppForegrounded()
 }
 class com.example.smash_card.activities.StatsEndQuizActivity {
+- boolean isContext
 # void onCreate(Bundle)
 + void onClick(View)
 + void onBackPressed()
+# void onStart()
+# void onStop()
+- void onAppBackgrounded()
+- void onAppForegrounded()
 }
 class com.example.smash_card.CharacterAdapter {
 - List<SmashCharacter> characters
@@ -41,12 +52,15 @@ class com.example.smash_card.CharacterAdapter.ViewHolder {
 ~ TextView charName
 }
 class com.example.smash_card.activities.GameActivity {
+- {static} String TAG
 - SmashCharacter goodAnswer
 - RadioGroup radioGroup
 - Button confirmButton
 - List<SmashCharacter> characters
 - List<SmashCharacter> charactersAnswers
 - InfoGame infoGame
+- String urlSong
+- boolean isContext
 # void onCreate(Bundle)
 + void onClick(View)
 - void handleConfirm(Context)
@@ -54,6 +68,10 @@ class com.example.smash_card.activities.GameActivity {
 + void onBackPressed()
 + void onCheckedChanged(RadioGroup,int)
 - void alertWrongAnswer(Context)
+# void onStart()
+# void onStop()
+- void onAppBackgrounded()
+- void onAppForegrounded()
 }
 class com.example.smash_card.Question {
 - List<SmashCharacter> charactersList
@@ -70,17 +88,37 @@ class com.example.smash_card.SmashCharacter {
 + void writeToParcel(Parcel,int)
 + int describeContents()
 }
+class com.example.smash_card.MusicPlayerService {
+~ MediaPlayer mediaPlayer
++ IBinder onBind(Intent)
++ void onCreate()
++ int onStartCommand(Intent,int,int)
++ void onDestroy()
++ void onLowMemory()
+}
 class com.example.smash_card.activities.HomeActivity {
 - {static} String TAG
 - List<SmashCharacter> characters
+- boolean isContext
+- ImageView charactersButton
+- ImageView startQuizButton
 # void onCreate(Bundle)
-- void loadDataFromApi(Button,Button)
+- void loadDataFromApi()
 + void onClick(View)
 - void dialogGameMode(Context)
 + void onBackPressed()
+# void onStart()
+# void onStop()
+- void onAppBackgrounded()
+- void onAppForegrounded()
 }
 class com.example.smash_card.activities.FullScreenImageActivity {
+- boolean isContext
+- String urlSong
 # void onCreate(Bundle)
+# void onStart()
+- void onAppBackgrounded()
+- void onAppForegrounded()
 }
 class com.example.smash_card.Utils {
 + {static} void playWavSound(AssetFileDescriptor)
@@ -88,15 +126,22 @@ class com.example.smash_card.Utils {
 }
 class com.example.smash_card.activities.FlashCardActivity {
 - SmashCharacter character
+- boolean isContext
 # void onCreate(Bundle)
 + void onClick(View)
+# void onStart()
+- void onAppBackgrounded()
+- void onAppForegrounded()
 }
 
 
 android.os.Parcelable <|.. com.example.smash_card.InfoGame
+androidx.lifecycle.LifecycleObserver <|.. com.example.smash_card.activities.AboutActivity
 androidx.appcompat.app.AppCompatActivity <|-- com.example.smash_card.activities.AboutActivity
+androidx.lifecycle.LifecycleObserver <|.. com.example.smash_card.activities.CharacterListActivity
 androidx.appcompat.app.AppCompatActivity <|-- com.example.smash_card.activities.CharacterListActivity
 com.example.smash_card.activities.OnClickListener <|.. com.example.smash_card.activities.StatsEndQuizActivity
+androidx.lifecycle.LifecycleObserver <|.. com.example.smash_card.activities.StatsEndQuizActivity
 androidx.appcompat.app.AppCompatActivity <|-- com.example.smash_card.activities.StatsEndQuizActivity
 com.example.smash_card.OnClickListener <|.. com.example.smash_card.CharacterAdapter
 com.example.smash_card.Adapter <|-- com.example.smash_card.CharacterAdapter
@@ -104,11 +149,16 @@ com.example.smash_card.CharacterAdapter +.. com.example.smash_card.CharacterAdap
 com.example.smash_card.ViewHolder <|-- com.example.smash_card.CharacterAdapter.ViewHolder
 com.example.smash_card.activities.OnClickListener <|.. com.example.smash_card.activities.GameActivity
 com.example.smash_card.activities.OnCheckedChangeListener <|.. com.example.smash_card.activities.GameActivity
+androidx.lifecycle.LifecycleObserver <|.. com.example.smash_card.activities.GameActivity
 androidx.appcompat.app.AppCompatActivity <|-- com.example.smash_card.activities.GameActivity
 android.os.Parcelable <|.. com.example.smash_card.SmashCharacter
+android.app.Service <|-- com.example.smash_card.MusicPlayerService
 com.example.smash_card.activities.OnClickListener <|.. com.example.smash_card.activities.HomeActivity
+androidx.lifecycle.LifecycleObserver <|.. com.example.smash_card.activities.HomeActivity
 androidx.appcompat.app.AppCompatActivity <|-- com.example.smash_card.activities.HomeActivity
+androidx.lifecycle.LifecycleObserver <|.. com.example.smash_card.activities.FullScreenImageActivity
 androidx.appcompat.app.AppCompatActivity <|-- com.example.smash_card.activities.FullScreenImageActivity
 com.example.smash_card.activities.OnClickListener <|.. com.example.smash_card.activities.FlashCardActivity
+androidx.lifecycle.LifecycleObserver <|.. com.example.smash_card.activities.FlashCardActivity
 androidx.appcompat.app.AppCompatActivity <|-- com.example.smash_card.activities.FlashCardActivity
 @enduml
